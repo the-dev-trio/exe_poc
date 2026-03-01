@@ -18,7 +18,7 @@ namespace InventoryApp
 
         private static void OnIsFocusedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Control ctrl && (bool)e.NewValue)
+            if (d is System.Windows.Controls.Control ctrl && (bool)e.NewValue)
                 ctrl.Loaded += (_, _) => ctrl.Focus();
         }
     }

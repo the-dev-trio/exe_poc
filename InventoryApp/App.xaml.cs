@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Threading;
+using System.IO;
 using InventoryApp.Data;
 
 namespace InventoryApp
@@ -14,7 +15,7 @@ namespace InventoryApp
             _mutex = new Mutex(true, "JewelleryManagementSystem_SingleInstance", out bool isNew);
             if (!isNew)
             {
-                MessageBox.Show("The application is already running.", "Jewellery Manager",
+                System.Windows.MessageBox.Show("The application is already running.", "Jewellery Manager",
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 Shutdown();
                 return;
@@ -27,7 +28,7 @@ namespace InventoryApp
                 var msg = args.Exception.Message.Contains("database") || args.Exception.Message.Contains("SQLite")
                     ? "Database error — the drive may have been disconnected.\n\n" + args.Exception.Message
                     : args.Exception.Message;
-                MessageBox.Show(msg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(msg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 args.Handled = true;
             };
         }
