@@ -9,7 +9,7 @@
             <TextBlock Text="Dashboard" FontSize="24" FontWeight="Bold" Foreground="White" Margin="0,0,0,20"/>
 
             <!-- ── Metal Rates Input ─────────────────────────────────── -->
-            <TextBlock Text="TODAY'S METAL RATES" FontSize="11" Foreground="#6b7280" FontWeight="SemiBold" Margin="0,0,0,8" LetterSpacing="1"/>
+            <TextBlock Text="TODAY'S METAL RATES" FontSize="11" Foreground="#6b7280" FontWeight="SemiBold" Margin="0,0,0,8"/>
             <Border Background="#1a1a2e" CornerRadius="10" Padding="20" Margin="0,0,0,24">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -42,7 +42,7 @@
             </Border>
 
             <!-- ── Asset Summary Cards ──────────────────────────────── -->
-            <TextBlock Text="ASSET SUMMARY" FontSize="11" Foreground="#6b7280" FontWeight="SemiBold" Margin="0,0,0,8" LetterSpacing="1"/>
+            <TextBlock Text="ASSET SUMMARY" FontSize="11" Foreground="#6b7280" FontWeight="SemiBold" Margin="0,0,0,8"/>
             <UniformGrid Columns="3" Margin="0,0,0,24">
                 <!-- Total Stock -->
                 <Border Style="{StaticResource CardBorder}">

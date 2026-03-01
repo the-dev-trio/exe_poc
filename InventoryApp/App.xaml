@@ -20,19 +20,19 @@
         <local:NullToVisibilityConverter x:Key="NullToVisibility"/>
 
         <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
-            <local:DashboardView xmlns:local="clr-namespace:InventoryApp" />
+            <local:DashboardView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:InventoryViewModel}">
-            <local:InventoryView xmlns:local="clr-namespace:InventoryApp" />
+            <local:InventoryView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:PurchasesViewModel}">
-            <local:PurchasesView xmlns:local="clr-namespace:InventoryApp" />
+            <local:PurchasesView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:SalesViewModel}">
-            <local:SalesView xmlns:local="clr-namespace:InventoryApp" />
+            <local:SalesView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
-            <local:SettingsView xmlns:local="clr-namespace:InventoryApp" />
+            <local:SettingsView />
         </DataTemplate>
 
         <!-- Common Styles -->
