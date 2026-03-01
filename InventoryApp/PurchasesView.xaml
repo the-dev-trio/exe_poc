@@ -1,0 +1,101 @@
+<UserControl x:Class="InventoryApp.PurchasesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:InventoryApp"
+             Background="#0f0f1e">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24">
+            <TextBlock Text="New Purchase Entry" FontSize="24" FontWeight="Bold" Foreground="White" Margin="0,0,0,20"/>
+
+            <!-- Header Info -->
+            <Border Background="#1a1a2e" CornerRadius="10" Padding="20" Margin="0,0,0,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                        <Label Content="Supplier"/>
+                        <ComboBox ItemsSource="{Binding Suppliers}" SelectedItem="{Binding SelectedSupplier}" DisplayMemberPath="Name"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                            <TextBox Width="140" Text="{Binding NewSupplierName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,6,0"/>
+                            <Button Content="+ Add" Command="{Binding AddSupplierCommand}" Style="{StaticResource PrimaryButton}" Padding="8,4"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                        <Label Content="Invoice Number"/>
+                        <TextBox Text="{Binding InvoiceNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <Label Content="Purchase Date"/>
+                        <DatePicker SelectedDate="{Binding PurchaseDate}"
+                                    Background="#1e1e2e" Foreground="White"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Item Line Entry -->
+            <Border Background="#1a1a2e" CornerRadius="10" Padding="20" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="ADD ITEM LINE" FontSize="11" Foreground="#6b7280" FontWeight="SemiBold" Margin="0,0,0,12"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Text="{Binding LineForm.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
+                        <ComboBox Grid.Column="1" ItemsSource="{Binding Categories}" SelectedValuePath="Id"
+                                  SelectedValue="{Binding LineForm.CategoryId}" DisplayMemberPath="Name" Margin="0,0,8,0"/>
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding PurityOptions}" SelectedItem="{Binding LineForm.PurityStr}" Margin="0,0,8,0"/>
+                        <TextBox Grid.Column="3" Text="{Binding LineForm.GrossWt, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
+                        <TextBox Grid.Column="4" Text="{Binding LineForm.StoneWt, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
+                        <TextBox Grid.Column="5" Text="{Binding LineForm.NetWt, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
+                        <TextBox Grid.Column="6" Text="{Binding LineForm.CostPrice, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
+                        <Button Grid.Column="7" Content="+ Add Line" Command="{Binding AddLineCommand}" Style="{StaticResource PrimaryButton}"/>
+                    </Grid>
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <TextBlock Text="Name" Width="130" Foreground="#6b7280" FontSize="11"/>
+                        <TextBlock Text="Category" Width="128" Foreground="#6b7280" FontSize="11"/>
+                        <TextBlock Text="Purity" Width="128" Foreground="#6b7280" FontSize="11"/>
+                        <TextBlock Text="Gross Wt" Width="98" Foreground="#6b7280" FontSize="11"/>
+                        <TextBlock Text="Stone Wt" Width="98" Foreground="#6b7280" FontSize="11"/>
+                        <TextBlock Text="Net Wt" Width="98" Foreground="#6b7280" FontSize="11"/>
+                        <TextBlock Text="Cost ₹" Width="108" Foreground="#6b7280" FontSize="11"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Lines DataGrid -->
+            <DataGrid ItemsSource="{Binding PurchaseLines}" AutoGenerateColumns="False" IsReadOnly="True"
+                      MaxHeight="300" Margin="0,0,0,16">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name"     Binding="{Binding Name}"     Width="*"/>
+                    <DataGridTextColumn Header="Purity"   Binding="{Binding Purity}"   Width="90"/>
+                    <DataGridTextColumn Header="Gross Wt" Binding="{Binding GrossWt, StringFormat={}{0:N2}}" Width="80"/>
+                    <DataGridTextColumn Header="Net Wt"   Binding="{Binding NetWt, StringFormat={}{0:N2}}"   Width="80"/>
+                    <DataGridTextColumn Header="Cost ₹"   Binding="{Binding CostPrice, StringFormat={}₹{0:N0}}" Width="90"/>
+                    <DataGridTemplateColumn Header="" Width="50">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="✕" Foreground="White" Background="#dc2626" BorderThickness="0" Width="28"
+                                        Command="{Binding DataContext.RemoveLineCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Footer -->
+            <Button Content="💾 Save &amp; Add to Inventory" Command="{Binding SaveAndAddToInventoryCommand}"
+                    Style="{StaticResource SuccessButton}" Width="260" Height="44" FontSize="15" HorizontalAlignment="Right"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
