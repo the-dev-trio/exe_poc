@@ -69,7 +69,7 @@
                                     CommandParameter="{Binding}" Margin="2" Background="#ff4d4f" Foreground="White" BorderThickness="0" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTextColumn>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
