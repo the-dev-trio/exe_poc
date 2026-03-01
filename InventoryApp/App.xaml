@@ -38,7 +38,7 @@
         <!-- Common Styles -->
         <Style x:Key="NavButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="Foreground" Value="#1f2937"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="Padding" Value="16,10"/>
@@ -52,7 +52,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="bd" Property="Background" Value="#2a2a3e"/>
+                                <Setter TargetName="bd" Property="Background" Value="#e5e7eb"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -61,12 +61,14 @@
         </Style>
 
         <Style x:Key="NavButtonActive" TargetType="Button" BasedOn="{StaticResource NavButton}">
-            <Setter Property="Background" Value="#3d3d5c"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#dbeafe"/>
+            <Setter Property="Foreground" Value="#1e40af"/>
         </Style>
 
         <Style x:Key="CardBorder" TargetType="Border">
-            <Setter Property="Background" Value="#1e1e2e"/>
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="BorderBrush" Value="#e5e7eb"/>
+            <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="10"/>
             <Setter Property="Padding" Value="20"/>
             <Setter Property="Margin" Value="8"/>
@@ -90,7 +92,7 @@
                                 <Setter TargetName="bd" Property="Background" Value="#6d28d9"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="bd" Property="Background" Value="#4a4a5e"/>
+                                <Setter TargetName="bd" Property="Background" Value="#9ca3af"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -117,54 +119,72 @@
         </Style>
 
         <Style TargetType="TextBox">
-            <Setter Property="Background" Value="#1e1e2e"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#3d3d5c"/>
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="Foreground" Value="#111827"/>
+            <Setter Property="BorderBrush" Value="#d1d5db"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,6"/>
             <Setter Property="FontSize" Value="13"/>
-            <Setter Property="CaretBrush" Value="White"/>
+            <Setter Property="CaretBrush" Value="#111827"/>
         </Style>
 
         <Style TargetType="ComboBox">
-            <Setter Property="Background" Value="#1e1e2e"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#3d3d5c"/>
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="Foreground" Value="#111827"/>
+            <Setter Property="BorderBrush" Value="#d1d5db"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,6"/>
             <Setter Property="FontSize" Value="13"/>
         </Style>
 
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="Foreground" Value="#111827"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Style.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Background" Value="#eff6ff"/>
+                    <Setter Property="Foreground" Value="#111827"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#dbeafe"/>
+                    <Setter Property="Foreground" Value="#111827"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style TargetType="DataGrid">
-            <Setter Property="Background" Value="#13131f"/>
-            <Setter Property="Foreground" Value="#cccccc"/>
-            <Setter Property="BorderBrush" Value="#2a2a3e"/>
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="BorderBrush" Value="#e5e7eb"/>
             <Setter Property="GridLinesVisibility" Value="Horizontal"/>
-            <Setter Property="HorizontalGridLinesBrush" Value="#2a2a3e"/>
-            <Setter Property="RowBackground" Value="#13131f"/>
-            <Setter Property="AlternatingRowBackground" Value="#1a1a2e"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#e5e7eb"/>
+            <Setter Property="RowBackground" Value="#ffffff"/>
+            <Setter Property="AlternatingRowBackground" Value="#f9fafb"/>
             <Setter Property="HeadersVisibility" Value="Column"/>
             <Setter Property="FontSize" Value="13"/>
         </Style>
 
         <Style TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="#1e1e2e"/>
-            <Setter Property="Foreground" Value="#9ca3af"/>
+            <Setter Property="Background" Value="#f3f4f6"/>
+            <Setter Property="Foreground" Value="#374151"/>
             <Setter Property="Padding" Value="10,6"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="BorderBrush" Value="#2a2a3e"/>
+            <Setter Property="BorderBrush" Value="#e5e7eb"/>
             <Setter Property="BorderThickness" Value="0,0,1,1"/>
         </Style>
 
         <Style TargetType="DataGridRow">
-            <Setter Property="Foreground" Value="#cccccc"/>
+            <Setter Property="Foreground" Value="#374151"/>
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="#2a2a4e"/>
+                    <Setter Property="Background" Value="#dbeafe"/>
+                    <Setter Property="Foreground" Value="#111827"/>
                 </Trigger>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#222234"/>
+                    <Setter Property="Background" Value="#f3f4f6"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -172,28 +192,35 @@
         <Style TargetType="DataGridCell">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Foreground" Value="#374151"/>
         </Style>
 
         <Style TargetType="TabControl">
-            <Setter Property="Background" Value="#0f0f1e"/>
+            <Setter Property="Background" Value="#f5f5f5"/>
             <Setter Property="BorderThickness" Value="0"/>
         </Style>
 
         <Style TargetType="TabItem">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#9ca3af"/>
+            <Setter Property="Foreground" Value="#4b5563"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="16,8"/>
             <Setter Property="FontSize" Value="13"/>
         </Style>
 
         <Style TargetType="Label">
-            <Setter Property="Foreground" Value="#9ca3af"/>
+            <Setter Property="Foreground" Value="#374151"/>
             <Setter Property="FontSize" Value="12"/>
         </Style>
 
         <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#cccccc"/>
+            <Setter Property="Foreground" Value="#374151"/>
+        </Style>
+
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#111827"/>
+            <Setter Property="Padding" Value="6,4"/>
         </Style>
     </Application.Resources>
 </Application>
