@@ -1,0 +1,27 @@
+<UserControl x:Class="InventoryApp.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2000/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2000/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+        <TextBlock Text="Inventory Dashboard" FontSize="28" FontWeight="Bold" Margin="0,0,0,40" HorizontalAlignment="Center" />
+        
+        <UniformGrid Columns="2">
+            <Border Background="#e6f7ff" Padding="20" Margin="10" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock Text="Total Items" FontSize="16" Foreground="#1890ff" />
+                    <TextBlock Text="{Binding TotalItems}" FontSize="32" FontWeight="Bold" />
+                </StackPanel>
+            </Border>
+
+            <Border Background="#f6ffed" Padding="20" Margin="10" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock Text="Total Inventory Value" FontSize="16" Foreground="#52c41a" />
+                    <TextBlock Text="{Binding TotalValue, StringFormat={}{0:C}}" FontSize="32" FontWeight="Bold" />
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+    </StackPanel>
+</UserControl>
