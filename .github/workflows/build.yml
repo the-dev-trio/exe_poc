@@ -6,6 +6,10 @@ jobs:
   build:
     runs-on: windows-latest
     
+    defaults:
+      run:
+        working-directory: InventoryApp
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -16,11 +20,11 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore Dependencies
-        run: dotnet restore InventoryApp/InventoryApp.csproj
+        run: dotnet restore
 
       - name: Build and Publish Standalone EXE
         run: |
-          dotnet publish InventoryApp/InventoryApp.csproj -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true -o publish/
+          dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true -o ../publish/
 
       - name: Upload Standalone EXE
         uses: actions/upload-artifact@v4
