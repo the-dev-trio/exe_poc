@@ -65,12 +65,8 @@ namespace InventoryApp.ViewModels
                 using var queue = new PrintQueue(new PrintServer(), "");
             }
             catch { }
-            // Fallback: use System.Drawing.Printing
-            foreach (System.Drawing.Printing.PrinterSettings.StringCollection printers =
-                     System.Drawing.Printing.PrinterSettings.InstalledPrinters)
-            {
-                foreach (string printer in printers) InstalledPrinters.Add(printer);
-            }
+            foreach (string printer in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
+                InstalledPrinters.Add(printer);
         }
 
         private void Save()
