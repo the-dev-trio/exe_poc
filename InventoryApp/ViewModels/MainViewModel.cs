@@ -1,5 +1,6 @@
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows;
 using InventoryApp.Data;
 using System.Timers;
 using System.Windows.Threading;
