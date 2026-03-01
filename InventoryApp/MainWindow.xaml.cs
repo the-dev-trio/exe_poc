@@ -7,8 +7,8 @@ namespace InventoryApp
     {
         public MainWindow()
         {
-            InitializeComponent();
             DatabaseHelper.InitializeDatabase();
+            InitializeComponent();
         }
     }
 }
