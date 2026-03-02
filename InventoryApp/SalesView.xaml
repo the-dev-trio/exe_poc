@@ -18,7 +18,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="🛒  POS / Sales" FontSize="22" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,12"/>
+            <TextBlock Grid.Row="0" Text="POS / Sales" FontSize="22" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,12"/>
 
             <!-- Scan input -->
             <Border Grid.Row="1" Background="#ffffff" CornerRadius="10" Padding="16" Margin="0,0,0,12" BorderBrush="#e5e7eb" BorderThickness="1">
@@ -31,7 +31,7 @@
                             <KeyBinding Key="Return" Command="{Binding ScanCommand}"/>
                         </TextBox.InputBindings>
                     </TextBox>
-                    <Button Grid.Column="1" Content="Scan / Add" Command="{Binding ScanCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0"/>
+                    <Button Grid.Column="1" Content="Scan / Add Item" Command="{Binding ScanCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0"/>
                     <StackPanel Grid.Column="2">
                         <Label Content="Making Charge ₹" FontSize="11"/>
                         <TextBox Text="{Binding MakingCharge, UpdateSourceTrigger=PropertyChanged}"/>
@@ -52,7 +52,7 @@
                     <DataGridTemplateColumn Width="40">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="✕" Background="#dc2626" Foreground="White" BorderThickness="0" Width="26"
+                                <Button Content="Remove" Width="60" Style="{StaticResource DangerButtonSmall}"
                                         Command="{Binding DataContext.RemoveCartItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         CommandParameter="{Binding}"/>
                             </DataTemplate>
@@ -121,10 +121,10 @@
 
                 <Separator Background="#e5e7eb" Margin="0,16"/>
 
-                <Button Content="✅  Complete Sale" Command="{Binding CompleteSaleCommand}"
-                        Style="{StaticResource SuccessButton}" Height="52" FontSize="16" Margin="0,0,0,8"/>
-                <Button Content="🗑  Clear Cart" Command="{Binding ClearCartCommand}"
-                        Background="#6b7280" Foreground="White" BorderThickness="0" Padding="0,10" FontSize="13"/>
+                <Button Content="Complete Sale" Command="{Binding CompleteSaleCommand}"
+                        Style="{StaticResource PrimaryButton}" Height="52" FontSize="16" Margin="0,0,0,8"/>
+                <Button Content="Clear Cart" Command="{Binding ClearCartCommand}"
+                        Style="{StaticResource SecondaryButton}" Padding="0,10" FontSize="13"/>
             </StackPanel>
         </Border>
     </Grid>

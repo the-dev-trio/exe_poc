@@ -79,8 +79,8 @@
             <!-- ── Quick Actions ─────────────────────────────────────── -->
             <TextBlock Text="QUICK ACTIONS" FontSize="11" Foreground="#4b5563" FontWeight="SemiBold" Margin="0,0,0,8"/>
             <StackPanel Orientation="Horizontal">
-                <Button Content="🛒  New Sale" Style="{StaticResource SuccessButton}" Width="160" Height="50" Margin="0,0,12,0" FontSize="15"/>
-                <Button Content="➕  Add Stock" Style="{StaticResource PrimaryButton}" Width="160" Height="50" FontSize="15"/>
+                <Button Content="New Sale" Style="{StaticResource PrimaryButton}" Width="160" Height="50" Margin="0,0,12,0" FontSize="15"/>
+                <Button Content="Add Stock" Style="{StaticResource PrimaryButton}" Width="160" Height="50" FontSize="15"/>
             </StackPanel>
 
         </StackPanel>

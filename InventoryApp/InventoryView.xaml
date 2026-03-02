@@ -5,19 +5,38 @@
     <Grid>
         <!-- Main content -->
         <TabControl Background="#f5f5f5" BorderThickness="0">
-            <TabItem Header="📂  Categories" Foreground="#374151">
+            <TabItem Header="Categories" Foreground="#374151">
                 <Grid Margin="20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="260"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Background="#ffffff" CornerRadius="10" Padding="12" Margin="0,0,0,16" BorderBrush="#e5e7eb" BorderThickness="1">
+                        <TextBlock Text="Step 1: Add categories (example: Rings, Chains). Step 2: Add stock items in the next tab."
+                                   Foreground="#6b7280" FontSize="12"/>
+                    </Border>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="260"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
                     <!-- Category List -->
                     <Border Grid.Column="0" Background="#ffffff" CornerRadius="10" Margin="0,0,16,0" BorderBrush="#e5e7eb" BorderThickness="1">
                         <DockPanel>
-                            <TextBlock DockPanel.Dock="Top" Text="Categories" FontSize="16" FontWeight="Bold"
-                                       Foreground="#111827" Margin="16,16,16,8"/>
-                            <Button DockPanel.Dock="Bottom" Content="+ New Category" Command="{Binding NewCategoryCommand}"
+                            <Grid DockPanel.Dock="Top" Margin="16,16,16,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Categories" FontSize="16" FontWeight="Bold"
+                                           Foreground="#111827"/>
+                                <TextBlock Grid.Column="1" Text="{Binding CategoriesCount, StringFormat={}Total: {0}}"
+                                           Foreground="#6b7280" FontSize="12" VerticalAlignment="Bottom"/>
+                            </Grid>
+                            <Button DockPanel.Dock="Bottom" Content="Add Category" Command="{Binding NewCategoryCommand}"
                                     Style="{StaticResource PrimaryButton}" Margin="12,8"/>
                             <ListBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"
                                      Background="Transparent" BorderThickness="0" Foreground="#111827">
@@ -33,30 +52,33 @@
                     <!-- Edit Panel -->
                     <Border Grid.Column="1" Background="#ffffff" CornerRadius="10" Padding="20" BorderBrush="#e5e7eb" BorderThickness="1">
                         <StackPanel>
-                            <TextBlock Text="Category Details" FontSize="16" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,16"/>
+                            <TextBlock Text="Create or Edit Category" FontSize="16" FontWeight="Bold" Foreground="#111827"/>
+                            <TextBlock Text="Use a clear name and metal type for better reporting." FontSize="12" Foreground="#6b7280" Margin="0,4,0,16"/>
                             <Label Content="Category Name"/>
                             <TextBox Text="{Binding EditCategory.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,12"/>
                             <Label Content="Metal Type"/>
                             <ComboBox ItemsSource="{Binding Source={StaticResource MetalTypeValues}}"
                                       SelectedItem="{Binding EditCategory.MetalType}" Margin="0,0,0,20"/>
                             <StackPanel Orientation="Horizontal">
-                                <Button Content="💾 Save" Command="{Binding SaveCategoryCommand}" Style="{StaticResource PrimaryButton}" Width="100" Margin="0,0,10,0"/>
-                                <Button Content="🗑 Delete" Command="{Binding DeleteCategoryCommand}" Style="{StaticResource DangerButton}" Width="100"/>
+                                <Button Content="Save" Command="{Binding SaveCategoryCommand}" Style="{StaticResource PrimaryButton}" Width="100" Margin="0,0,10,0"/>
+                                <Button Content="Delete" Command="{Binding DeleteCategoryCommand}" Style="{StaticResource DangerButton}" Width="100"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
+                    </Grid>
                 </Grid>
             </TabItem>
 
-            <TabItem Header="💎  Stock Items" Foreground="#374151">
+            <TabItem Header="Stock Items" Foreground="#374151">
                 <Grid Margin="20">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <!-- Filter Bar -->
-                    <Border Grid.Row="0" Background="#ffffff" CornerRadius="10" Padding="16" Margin="0,0,0,16" BorderBrush="#e5e7eb" BorderThickness="1">
+                    <Border Grid.Row="0" Background="#ffffff" CornerRadius="10" Padding="16" Margin="0,0,0,12" BorderBrush="#e5e7eb" BorderThickness="1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -72,13 +94,23 @@
                                       DisplayMemberPath="Name" Margin="0,0,12,0"/>
                             <ComboBox Grid.Column="2" ItemsSource="{Binding StatusFilters}"
                                       SelectedItem="{Binding FilterStatus}" Margin="0,0,12,0"/>
-                            <Button Grid.Column="3" Content="➕ Add Item" Style="{StaticResource PrimaryButton}"
+                            <Button Grid.Column="3" Content="Add Item" Style="{StaticResource PrimaryButton}"
                                     Command="{Binding OpenAddModalCommand}"/>
                         </Grid>
                     </Border>
 
+                    <Border Grid.Row="1" Background="#ffffff" CornerRadius="10" Padding="10,8" Margin="0,0,0,16" BorderBrush="#e5e7eb" BorderThickness="1">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding TotalItemsCount, StringFormat={}Total Items: {0}}" Foreground="#111827" FontWeight="SemiBold"/>
+                            <TextBlock Text="  •  " Foreground="#9ca3af"/>
+                            <TextBlock Text="{Binding InStockCount, StringFormat={}In Stock: {0}}" Foreground="#374151"/>
+                            <TextBlock Text="  •  " Foreground="#9ca3af"/>
+                            <TextBlock Text="{Binding VisibleItemsCount, StringFormat={}Showing: {0}}" Foreground="#374151"/>
+                        </StackPanel>
+                    </Border>
+
                     <!-- DataGrid -->
-                    <DataGrid Grid.Row="1" ItemsSource="{Binding Items}" AutoGenerateColumns="False"
+                    <DataGrid Grid.Row="2" ItemsSource="{Binding Items}" AutoGenerateColumns="False"
                               IsReadOnly="True" SelectedItem="{Binding SelectedItem}" SelectionMode="Single"
                               CanUserResizeRows="False">
                         <DataGrid.Columns>
@@ -98,16 +130,16 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button Content="🏷 Tag" Width="60" Margin="2"
-                                                    Background="#1d4ed8" Foreground="White" BorderThickness="0"
+                                            <Button Content="Tag" Width="60" Margin="2"
+                                                    Style="{StaticResource PrimaryButtonSmall}"
                                                     Command="{Binding DataContext.PrintTagCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}"/>
-                                            <Button Content="✏" Width="32" Margin="2"
-                                                    Background="#d97706" Foreground="White" BorderThickness="0"
+                                            <Button Content="Edit" Width="50" Margin="2"
+                                                    Style="{StaticResource PrimaryButtonSmall}"
                                                     Command="{Binding DataContext.OpenAddModalCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}"/>
-                                            <Button Content="🗑" Width="32" Margin="2"
-                                                    Background="#dc2626" Foreground="White" BorderThickness="0"
+                                            <Button Content="Delete" Width="60" Margin="2"
+                                                    Style="{StaticResource DangerButtonSmall}"
                                                     Command="{Binding DataContext.DeleteItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}"/>
                                         </StackPanel>
@@ -126,7 +158,8 @@
             <Rectangle Fill="#88000000"/>
             <Border Background="#ffffff" CornerRadius="12" Padding="28" Width="480" VerticalAlignment="Center" BorderBrush="#e5e7eb" BorderThickness="1">
                 <StackPanel>
-                    <TextBlock Text="Add / Edit Inventory Item" FontSize="18" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+                    <TextBlock Text="Add or Edit Inventory Item" FontSize="18" FontWeight="Bold" Foreground="#111827"/>
+                    <TextBlock Text="Fill the essentials and save. SKU is generated automatically." FontSize="12" Foreground="#6b7280" Margin="0,4,0,20"/>
 
                     <Grid Margin="0,0,0,12">
                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
@@ -171,8 +204,8 @@
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Content="Cancel" Command="{Binding CloseModalCommand}" Width="90" Margin="0,0,10,0"
-                                Background="#6b7280" Foreground="White" BorderThickness="0" Padding="0,8"/>
-                        <Button Content="💾 Save &amp; Print Tag" Command="{Binding SaveItemCommand}"
+                                Style="{StaticResource SecondaryButton}"/>
+                        <Button Content="Save &amp; Print Tag" Command="{Binding SaveItemCommand}"
                                 Style="{StaticResource PrimaryButton}" Width="150"/>
                     </StackPanel>
                 </StackPanel>

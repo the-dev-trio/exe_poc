@@ -20,7 +20,7 @@
                         <ComboBox ItemsSource="{Binding Suppliers}" SelectedItem="{Binding SelectedSupplier}" DisplayMemberPath="Name"/>
                         <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
                             <TextBox Width="140" Text="{Binding NewSupplierName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,6,0"/>
-                            <Button Content="+ Add" Command="{Binding AddSupplierCommand}" Style="{StaticResource PrimaryButton}" Padding="8,4"/>
+                            <Button Content="Add Supplier" Command="{Binding AddSupplierCommand}" Style="{StaticResource PrimaryButtonSmall}"/>
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Margin="0,0,12,0">
@@ -58,7 +58,7 @@
                         <TextBox Grid.Column="4" Text="{Binding LineForm.StoneWt, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
                         <TextBox Grid.Column="5" Text="{Binding LineForm.NetWt, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
                         <TextBox Grid.Column="6" Text="{Binding LineForm.CostPrice, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
-                        <Button Grid.Column="7" Content="+ Add Line" Command="{Binding AddLineCommand}" Style="{StaticResource PrimaryButton}"/>
+                        <Button Grid.Column="7" Content="Add Line" Command="{Binding AddLineCommand}" Style="{StaticResource PrimaryButtonSmall}"/>
                     </Grid>
                     <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
                         <TextBlock Text="Name" Width="130" Foreground="#6b7280" FontSize="11"/>
@@ -84,7 +84,7 @@
                     <DataGridTemplateColumn Header="" Width="50">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="✕" Foreground="White" Background="#dc2626" BorderThickness="0" Width="28"
+                                <Button Content="Remove" Width="60" Style="{StaticResource DangerButtonSmall}"
                                         Command="{Binding DataContext.RemoveLineCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         CommandParameter="{Binding}"/>
                             </DataTemplate>
@@ -94,8 +94,8 @@
             </DataGrid>
 
             <!-- Footer -->
-            <Button Content="💾 Save &amp; Add to Inventory" Command="{Binding SaveAndAddToInventoryCommand}"
-                    Style="{StaticResource SuccessButton}" Width="260" Height="44" FontSize="15" HorizontalAlignment="Right"/>
+            <Button Content="Save &amp; Add to Inventory" Command="{Binding SaveAndAddToInventoryCommand}"
+                    Style="{StaticResource PrimaryButton}" Width="260" Height="44" FontSize="15" HorizontalAlignment="Right"/>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

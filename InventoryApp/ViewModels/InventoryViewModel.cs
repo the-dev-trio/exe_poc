@@ -34,6 +34,34 @@ namespace InventoryApp.ViewModels
         public ObservableCollection<Category> CategoriesForFilter { get; } = new();
         public string[] StatusFilters { get; } = { "All", "In Stock", "Sold" };
 
+        private int _totalItemsCount;
+        public int TotalItemsCount
+        {
+            get => _totalItemsCount;
+            set => SetProperty(ref _totalItemsCount, value);
+        }
+
+        private int _inStockCount;
+        public int InStockCount
+        {
+            get => _inStockCount;
+            set => SetProperty(ref _inStockCount, value);
+        }
+
+        private int _visibleItemsCount;
+        public int VisibleItemsCount
+        {
+            get => _visibleItemsCount;
+            set => SetProperty(ref _visibleItemsCount, value);
+        }
+
+        private int _categoriesCount;
+        public int CategoriesCount
+        {
+            get => _categoriesCount;
+            set => SetProperty(ref _categoriesCount, value);
+        }
+
         private string _searchText = string.Empty;
         public string SearchText
         {
@@ -111,6 +139,7 @@ namespace InventoryApp.ViewModels
                 Categories.Add(c);
                 CategoriesForFilter.Add(c);
             }
+            CategoriesCount = Categories.Count;
         }
 
         private void SaveCategory()
@@ -136,6 +165,11 @@ namespace InventoryApp.ViewModels
             Items.Clear();
             foreach (var item in DatabaseHelper.GetInventoryItems(SearchText, catId, isSold))
                 Items.Add(item);
+            VisibleItemsCount = Items.Count;
+
+            var counts = DatabaseHelper.GetInventoryCounts();
+            TotalItemsCount = counts.Total;
+            InStockCount = counts.InStock;
         }
 
         private void OpenModal(InventoryItem? existing)

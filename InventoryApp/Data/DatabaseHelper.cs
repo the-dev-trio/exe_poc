@@ -218,6 +218,22 @@ namespace InventoryApp.Data
             return list;
         }
 
+        public static (int Total, int InStock, int Sold) GetInventoryCounts()
+        {
+            using var conn = Open();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = @"SELECT COUNT(*),
+                                       SUM(CASE WHEN IsSold=0 THEN 1 ELSE 0 END),
+                                       SUM(CASE WHEN IsSold=1 THEN 1 ELSE 0 END)
+                                FROM Inventory";
+            using var r = cmd.ExecuteReader();
+            if (!r.Read()) return (0, 0, 0);
+            int total = Convert.ToInt32(r.GetValue(0) ?? 0);
+            int inStock = r.IsDBNull(1) ? 0 : Convert.ToInt32(r.GetValue(1));
+            int sold = r.IsDBNull(2) ? 0 : Convert.ToInt32(r.GetValue(2));
+            return (total, inStock, sold);
+        }
+
         public static InventoryItem? GetItemBySKU(string sku)
         {
             return GetInventoryItems(search: sku).FirstOrDefault(i => i.SKU == sku);

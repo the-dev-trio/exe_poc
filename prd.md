@@ -284,3 +284,7 @@ Phase 4 (Dashboard): Connect the "Total Value" queries.
 Phase 5 (Polish): UI Styling (Metro/Modern look), Keyboard shortcuts (F1 for Sales, Esc to Close).
 
 This structure ensures you cover the "missing" parts (Purchases) while adhering to the strict speed and printing requirements.
+
+git add .
+git commit -m "updated code"
+git push

@@ -49,7 +49,7 @@
                 <!-- Spacer -->
                 <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="{Binding CurrentDateTime}" FontSize="13" Foreground="#4b5563" Margin="0,0,20,0" VerticalAlignment="Center"/>
-                    <Button Content="💾 Backup Now" Command="{Binding BackupNowCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,12,0"/>
+                    <Button Content="Backup Now" Command="{Binding BackupNowCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,12,0"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -57,19 +57,19 @@
         <!-- ═══ SIDEBAR ═══════════════════════════════════════════════ -->
         <Border Grid.Row="1" Grid.Column="0" Background="#ffffff" BorderBrush="#e5e7eb" BorderThickness="0,0,1,0">
             <StackPanel Margin="8,16,8,0">
-                <Button Content="📊  Dashboard"
+                <Button Content="Dashboard"
                         Style="{Binding DashboardNavStyle, Mode=OneWay}"
                         Command="{Binding ShowDashboardCommand}" />
-                <Button Content="🛒  POS / Sales  [F1]"
+                <Button Content="POS / Sales  [F1]"
                         Style="{Binding SalesNavStyle, Mode=OneWay}"
                         Command="{Binding ShowSalesCommand}" />
-                <Button Content="💎  Inventory"
+                <Button Content="Inventory"
                         Style="{Binding InventoryNavStyle, Mode=OneWay}"
                         Command="{Binding ShowInventoryCommand}" />
-                <Button Content="📦  Purchases"
+                <Button Content="Purchases"
                         Style="{Binding PurchasesNavStyle, Mode=OneWay}"
                         Command="{Binding ShowPurchasesCommand}" />
-                <Button Content="⚙️  Settings"
+                <Button Content="Settings"
                         Style="{Binding SettingsNavStyle, Mode=OneWay}"
                         Command="{Binding ShowSettingsCommand}" />
             </StackPanel>
