@@ -38,21 +38,22 @@
         <!-- Common Styles -->
         <Style x:Key="NavButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#1f2937"/>
+            <Setter Property="Foreground" Value="#ffffff"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="Padding" Value="16,10"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="6" Margin="4,2">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="8" Margin="6,3">
                             <ContentPresenter Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="bd" Property="Background" Value="#e5e7eb"/>
+                                <Setter TargetName="bd" Property="Background" Value="#ffffff22"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -61,8 +62,8 @@
         </Style>
 
         <Style x:Key="NavButtonActive" TargetType="Button" BasedOn="{StaticResource NavButton}">
-            <Setter Property="Background" Value="#dbeafe"/>
-            <Setter Property="Foreground" Value="#1e40af"/>
+            <Setter Property="Background" Value="#ffffff33"/>
+            <Setter Property="Foreground" Value="#ffffff"/>
         </Style>
 
         <Style x:Key="CardBorder" TargetType="Border">
@@ -75,7 +76,7 @@
         </Style>
 
         <Style x:Key="PrimaryButton" TargetType="Button">
-            <Setter Property="Background" Value="#7c3aed"/>
+            <Setter Property="Background" Value="#003a46"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="16,8"/>
@@ -91,7 +92,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="bd" Property="Background" Value="#6d28d9"/>
+                                <Setter TargetName="bd" Property="Background" Value="#024754"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="bd" Property="Background" Value="#9ca3af"/>
@@ -114,10 +115,9 @@
         <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}"/>
 
         <Style x:Key="SecondaryButton" TargetType="Button">
-            <Setter Property="Background" Value="#ffffff"/>
-            <Setter Property="Foreground" Value="#374151"/>
-            <Setter Property="BorderBrush" Value="#e5e7eb"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="#003a46"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="14,7"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -126,17 +126,15 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="8">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="bd" Property="Background" Value="#f3f4f6"/>
+                                <Setter TargetName="bd" Property="Background" Value="#024754"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="bd" Property="Background" Value="#f3f4f6"/>
-                                <Setter Property="Foreground" Value="#9ca3af"/>
+                                <Setter TargetName="bd" Property="Background" Value="#9ca3af"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

@@ -55,8 +55,9 @@
         </Border>
 
         <!-- ═══ SIDEBAR ═══════════════════════════════════════════════ -->
-        <Border Grid.Row="1" Grid.Column="0" Background="#ffffff" BorderBrush="#e5e7eb" BorderThickness="0,0,1,0">
-            <StackPanel Margin="8,16,8,0">
+        <Border Grid.Row="1" Grid.Column="0" Background="#003a46" BorderBrush="#022f38" BorderThickness="0,0,1,0">
+            <StackPanel Margin="10,18,10,0">
+                <TextBlock Text="LedgerMate" FontSize="18" FontWeight="Bold" Foreground="#ffffff" Margin="8,0,8,16"/>
                 <Button Content="Dashboard"
                         Style="{Binding DashboardNavStyle, Mode=OneWay}"
                         Command="{Binding ShowDashboardCommand}" />
