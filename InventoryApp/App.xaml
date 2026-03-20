@@ -17,8 +17,8 @@
         <SolidColorBrush x:Key="MutedTextBrush" Color="#6c757d"/>
         <SolidColorBrush x:Key="SidebarTextBrush" Color="#94a3b8"/>
 
-        <FontFamily x:Key="BodyFont">Segoe UI, Inter, Arial</FontFamily>
-        <FontFamily x:Key="HeadingFont">Georgia, Playfair Display, Times New Roman</FontFamily>
+        <FontFamily x:Key="BodyFont">pack://application:,,,/Assets/Fonts/Inter-Variable.ttf#Inter</FontFamily>
+        <FontFamily x:Key="HeadingFont">pack://application:,,,/Assets/Fonts/PlayfairDisplay-Variable.ttf#Playfair Display</FontFamily>
         <!-- Enum providers for XAML ComboBox binding -->
         <ObjectDataProvider x:Key="MetalTypeValues" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
