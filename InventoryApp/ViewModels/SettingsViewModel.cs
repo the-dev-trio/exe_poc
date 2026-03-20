@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Printing;
+using System.IO;
 using InventoryApp.Data;
 
 namespace InventoryApp.ViewModels
@@ -32,16 +33,18 @@ namespace InventoryApp.ViewModels
         private string _backupPath = string.Empty;
         public string BackupPath { get => _backupPath; set => SetProperty(ref _backupPath, value); }
 
-        public ICommand SaveCommand              { get; }
-        public ICommand BrowseBackupPathCommand  { get; }
-        public ICommand TestLabelPrinterCommand  { get; }
-        public ICommand TestReceiptPrinterCommand{ get; }
+        public ICommand SaveCommand               { get; }
+        public ICommand BrowseBackupPathCommand   { get; }
+        public ICommand BackupNowCommand          { get; }
+        public ICommand TestLabelPrinterCommand   { get; }
+        public ICommand TestReceiptPrinterCommand { get; }
 
         public SettingsViewModel(Action onSaved)
         {
             _onSaved = onSaved;
             SaveCommand               = new RelayCommand(_ => Save());
             BrowseBackupPathCommand   = new RelayCommand(_ => BrowseBackup());
+            BackupNowCommand          = new RelayCommand(_ => BackupNow());
             TestLabelPrinterCommand   = new RelayCommand(_ => TestLabel());
             TestReceiptPrinterCommand = new RelayCommand(_ => TestReceipt());
             Load();
@@ -88,6 +91,34 @@ namespace InventoryApp.ViewModels
             using var dlg = new System.Windows.Forms.FolderBrowserDialog { Description = "Select Backup Folder" };
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 BackupPath = dlg.SelectedPath;
+        }
+
+        private void BackupNow()
+        {
+            try
+            {
+                var targetFolder = BackupPath;
+                if (string.IsNullOrWhiteSpace(targetFolder) || !Directory.Exists(targetFolder))
+                {
+                    using var dlg = new System.Windows.Forms.FolderBrowserDialog { Description = "Select Backup Folder" };
+                    if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+                    targetFolder = dlg.SelectedPath;
+                    BackupPath = targetFolder;
+                }
+
+                if (!Directory.Exists(targetFolder)) Directory.CreateDirectory(targetFolder);
+                var fileName = $"jms_backup_{DateTime.Now:yyyyMMdd_HHmmss}.db";
+                var dest = Path.Combine(targetFolder, fileName);
+                DatabaseHelper.BackupTo(dest);
+
+                System.Windows.MessageBox.Show($"Backup created:\n{dest}", "Backup",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Backup failed:\n{ex.Message}", "Backup",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            }
         }
 
         private void TestLabel()

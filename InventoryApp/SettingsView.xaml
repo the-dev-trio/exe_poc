@@ -54,11 +54,15 @@
             <Border Background="#ffffff" CornerRadius="10" Padding="20" Margin="0,0,0,24" BorderBrush="#e5e7eb" BorderThickness="1">
                 <StackPanel>
                     <Grid>
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                         <TextBox Grid.Column="0" Text="{Binding BackupPath}" IsReadOnly="True" Margin="0,0,8,0"/>
                         <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseBackupPathCommand}"
+                                Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"/>
+                        <Button Grid.Column="2" Content="Backup Now" Command="{Binding BackupNowCommand}"
                                 Style="{StaticResource PrimaryButton}"/>
                     </Grid>
+                    <TextBlock Text="Tip: choose a local folder or a synced drive (e.g., Google Drive)."
+                               Foreground="#6b7280" FontSize="11" Margin="0,6,0,0"/>
                     <CheckBox Content="Auto-backup database when application closes"
                               IsChecked="{Binding AutoBackup}" Foreground="#374151" Margin="0,12,0,0"/>
                 </StackPanel>
