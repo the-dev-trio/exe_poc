@@ -4,7 +4,8 @@
         xmlns:vm="clr-namespace:InventoryApp.ViewModels"
         Title="Reddy Jewellery Manager" Height="700" Width="1200"
         WindowStartupLocation="CenterScreen"
-        Background="#f5f5f5">
+        Background="{StaticResource AppBackgroundBrush}"
+        FontFamily="{StaticResource BodyFont}">
 
     <Window.DataContext>
         <vm:MainViewModel />
@@ -20,12 +21,12 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{Binding SidebarWidth, Mode=OneWay}" />
+            <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <!-- ═══ TOP HEADER ════════════════════════════════════════════ -->
-        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="#ffffff" BorderBrush="#e5e7eb" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="#ffffff" BorderBrush="#e2e8f0" BorderThickness="0,0,0,1">
             <Grid Margin="16,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -42,22 +43,23 @@
 
                 <!-- Brand name -->
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding ShopName}" FontSize="20" FontWeight="Bold" Foreground="#111827"/>
-                    <TextBlock Text="Jewellery Management System" FontSize="11" Foreground="#6b7280"/>
+                    <TextBlock Text="{Binding ShopName}" FontSize="20" Style="{StaticResource HeadingText}"/>
+                    <TextBlock Text="Jewellery Management System" FontSize="11" Foreground="{StaticResource MutedTextBrush}"/>
                 </StackPanel>
 
                 <!-- Spacer -->
                 <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding CurrentDateTime}" FontSize="13" Foreground="#4b5563" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding CurrentDateTime}" FontSize="13" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,20,0" VerticalAlignment="Center"/>
                     <Button Content="Backup Now" Command="{Binding BackupNowCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,12,0"/>
                 </StackPanel>
             </Grid>
         </Border>
 
         <!-- ═══ SIDEBAR ═══════════════════════════════════════════════ -->
-        <Border Grid.Row="1" Grid.Column="0" Background="#003a46" BorderBrush="#022f38" BorderThickness="0,0,1,0">
+        <Border Grid.Row="1" Grid.Column="0" Background="{StaticResource SidebarBrush}" BorderBrush="{StaticResource SidebarDividerBrush}" BorderThickness="0,0,1,0">
             <StackPanel Margin="10,18,10,0">
-                <TextBlock Text="LedgerMate" FontSize="18" FontWeight="Bold" Foreground="#ffffff" Margin="8,0,8,16"/>
+                <TextBlock Text="Reddy Jewellery" FontSize="18" Style="{StaticResource HeadingText}" Foreground="{StaticResource GoldBrush}" Margin="8,0,8,2"/>
+                <TextBlock Text="EST. 2026" FontSize="10" Foreground="{StaticResource SidebarTextBrush}" Margin="8,0,8,16"/>
                 <Button Content="Dashboard"
                         Style="{Binding DashboardNavStyle, Mode=OneWay}"
                         Command="{Binding ShowDashboardCommand}" />
@@ -77,6 +79,8 @@
         </Border>
 
         <!-- ═══ MAIN CONTENT ═══════════════════════════════════════════ -->
-        <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding CurrentView}" />
+        <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ContentControl Content="{Binding CurrentView}" />
+        </ScrollViewer>
     </Grid>
 </Window>

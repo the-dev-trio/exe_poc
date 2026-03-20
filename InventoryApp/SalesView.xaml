@@ -2,7 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:InventoryApp"
-             Background="#f5f5f5">
+             Background="{StaticResource AppBackgroundBrush}">
     <Grid Margin="16">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -18,10 +18,10 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="POS / Sales" FontSize="22" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,12"/>
+            <TextBlock Grid.Row="0" Text="POS / Sales" FontSize="22" Style="{StaticResource HeadingText}" Margin="0,0,0,12"/>
 
             <!-- Scan input -->
-            <Border Grid.Row="1" Background="#ffffff" CornerRadius="10" Padding="16" Margin="0,0,0,12" BorderBrush="#e5e7eb" BorderThickness="1">
+            <Border Grid.Row="1" Style="{StaticResource CardBorder}" Padding="16" Margin="0,0,0,12">
                 <Grid>
                     <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="150"/></Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" Text="{Binding ScanInput, UpdateSourceTrigger=PropertyChanged}"
@@ -33,7 +33,7 @@
                     </TextBox>
                     <Button Grid.Column="1" Content="Scan / Add Item" Command="{Binding ScanCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0"/>
                     <StackPanel Grid.Column="2">
-                        <Label Content="Making Charge ₹" FontSize="11"/>
+                        <Label Content="Making Charge ₹" FontSize="11" Foreground="{StaticResource MutedTextBrush}"/>
                         <TextBox Text="{Binding MakingCharge, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </Grid>
@@ -62,30 +62,30 @@
             </DataGrid>
 
             <!-- Totals + Status -->
-            <Border Grid.Row="3" Background="#ffffff" CornerRadius="10" Padding="16" Margin="0,12,0,0" BorderBrush="#e5e7eb" BorderThickness="1">
+            <Border Grid.Row="3" Style="{StaticResource CardBorder}" Padding="16" Margin="0,12,0,0">
                 <Grid>
                     <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" Foreground="#6b7280" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
                     <StackPanel Grid.Column="1" HorizontalAlignment="Right">
-                        <TextBlock Text="{Binding Subtotal,  StringFormat={}Subtotal: ₹{0:N2}}"  Foreground="#374151"/>
-                        <TextBlock Text="{Binding GstAmount, StringFormat={}GST (3%): ₹{0:N2}}"  Foreground="#374151"/>
+                        <TextBlock Text="{Binding Subtotal,  StringFormat={}Subtotal: ₹{0:N2}}"  Foreground="{StaticResource PrimaryTextBrush}"/>
+                        <TextBlock Text="{Binding GstAmount, StringFormat={}GST (3%): ₹{0:N2}}"  Foreground="{StaticResource PrimaryTextBrush}"/>
                         <TextBlock Text="{Binding GrandTotal,StringFormat={}TOTAL:    ₹{0:N2}}"
-                                   FontSize="20" FontWeight="Bold" Foreground="#15803d"/>
+                                   FontSize="20" FontWeight="Bold" Foreground="{StaticResource GoldBrush}"/>
                     </StackPanel>
                 </Grid>
             </Border>
         </Grid>
 
         <!-- ══ RIGHT: Customer + Payment ═══════════════════════════ -->
-        <Border Grid.Column="1" Background="#ffffff" CornerRadius="10" Padding="20" BorderBrush="#e5e7eb" BorderThickness="1">
+        <Border Grid.Column="1" Style="{StaticResource CardBorder}" Padding="20">
             <StackPanel>
-                <TextBlock Text="Customer" FontSize="16" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,12"/>
+                <TextBlock Text="Customer" FontSize="16" Style="{StaticResource HeadingText}" Margin="0,0,0,12"/>
                 <Label Content="Search (Name / Mobile)"/>
                 <TextBox Text="{Binding CustomerSearch, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,4"/>
                 <!-- Suggestions -->
                 <ListBox ItemsSource="{Binding CustomerSuggestions}"
                          Visibility="{Binding CustomerSuggestions.Count, Converter={StaticResource BoolToVisibility}}"
-                         Background="#ffffff" Foreground="#111827" MaxHeight="120" Margin="0,0,0,8" BorderBrush="#e5e7eb" BorderThickness="1">
+                         Background="#ffffff" Foreground="#111827" MaxHeight="120" Margin="0,0,0,8" BorderBrush="#e2e8f0" BorderThickness="1">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock>
@@ -104,22 +104,22 @@
                 <Label Content="Mobile"/>
                 <TextBox Text="{Binding CurrentCustomer.Mobile, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,16"/>
 
-                <Separator Background="#e5e7eb" Margin="0,0,0,16"/>
+                <Separator Background="#e2e8f0" Margin="0,0,0,16"/>
 
-                <TextBlock Text="Payment Mode" FontSize="14" FontWeight="SemiBold" Foreground="#111827" Margin="0,0,0,8"/>
+                <TextBlock Text="Payment Mode" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource PrimaryTextBrush}" Margin="0,0,0,8"/>
                 <ListBox ItemsSource="{Binding PaymentModes}" SelectedItem="{Binding SelectedPaymentMode}"
                          Background="Transparent" Foreground="#111827" BorderThickness="0">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="Padding" Value="10,8"/>
                             <Setter Property="Margin" Value="0,2"/>
-                            <Setter Property="Foreground" Value="#111827"/>
+                            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
                             <Setter Property="Background" Value="Transparent"/>
                         </Style>
                     </ListBox.ItemContainerStyle>
                 </ListBox>
 
-                <Separator Background="#e5e7eb" Margin="0,16"/>
+                <Separator Background="#e2e8f0" Margin="0,16"/>
 
                 <Button Content="Complete Sale" Command="{Binding CompleteSaleCommand}"
                         Style="{StaticResource PrimaryButton}" Height="52" FontSize="16" Margin="0,0,0,8"/>
