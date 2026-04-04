@@ -16,6 +16,8 @@
         <SolidColorBrush x:Key="PrimaryTextBrush" Color="#333333"/>
         <SolidColorBrush x:Key="MutedTextBrush" Color="#6c757d"/>
         <SolidColorBrush x:Key="SidebarTextBrush" Color="#94a3b8"/>
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#1A237E"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#D4AF37"/>
 
         <FontFamily x:Key="BodyFont">pack://application:,,,/Assets/Fonts/Inter-Variable.ttf#Inter</FontFamily>
         <FontFamily x:Key="HeadingFont">pack://application:,,,/Assets/Fonts/PlayfairDisplay-Variable.ttf#Playfair Display</FontFamily>
