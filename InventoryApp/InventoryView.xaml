@@ -138,9 +138,11 @@
                         </Border>
 
                         <!-- Count summary -->
-                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Padding="16,10" Background="#fafafa">
-                            <TextBlock Text="{Binding VisibleItemsCount, StringFormat={}Showing {0} items}" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
-                        </StackPanel>
+                        <Border DockPanel.Dock="Top" Padding="16,10" Background="#fafafa">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding VisibleItemsCount, StringFormat={}Showing {0} items}" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
 
                         <!-- DataGrid -->
                         <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False" IsReadOnly="True" 
