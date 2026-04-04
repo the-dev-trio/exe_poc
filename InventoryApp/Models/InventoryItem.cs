@@ -9,6 +9,7 @@ namespace InventoryApp.Models
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public MetalType MetalType { get; set; } = MetalType.Gold;
+        public int ItemCount { get; set; }
     }
 
     public class InventoryItem

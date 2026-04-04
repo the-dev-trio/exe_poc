@@ -155,10 +155,23 @@ namespace InventoryApp.Data
             var list = new List<Category>();
             using var conn = Open();
             using var cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT Id, Name, MetalType FROM Categories ORDER BY Name";
+            cmd.CommandText = @"
+                SELECT c.Id, c.Name, c.MetalType, COUNT(i.SKU) as ItemCount
+                FROM Categories c
+                LEFT JOIN Inventory i ON i.CategoryId = c.Id
+                GROUP BY c.Id
+                ORDER BY c.Name";
             using var r = cmd.ExecuteReader();
             while (r.Read())
-                list.Add(new Category { Id = r.GetInt32(0), Name = r.GetString(1), MetalType = Enum.Parse<MetalType>(r.GetString(2)) });
+            {
+                list.Add(new Category
+                {
+                    Id = r.GetInt32(0),
+                    Name = r.GetString(1),
+                    MetalType = r.IsDBNull(2) ? MetalType.Gold : Enum.Parse<MetalType>(r.GetString(2)),
+                    ItemCount = r.GetInt32(3)
+                });
+            }
             return list;
         }
 

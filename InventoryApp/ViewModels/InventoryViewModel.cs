@@ -11,11 +11,18 @@ namespace InventoryApp.ViewModels
         // ── Categories ────────────────────────────────────────────────
         public ObservableCollection<Category> Categories { get; } = new();
 
-        private Category _selectedCategory = new();
-        public Category SelectedCategory
+        private Category? _selectedCategory;
+        public Category? SelectedCategory
         {
             get => _selectedCategory;
-            set { SetProperty(ref _selectedCategory, value); EditCategory = value != null ? new Category { Id = value.Id, Name = value.Name, MetalType = value.MetalType } : new(); }
+            set 
+            { 
+                if (SetProperty(ref _selectedCategory, value))
+                {
+                    // Master-Detail mapping: Clicking a category in sidebar filters the items
+                    LoadItems();
+                }
+            }
         }
 
         private Category _editCategory = new();
@@ -25,6 +32,16 @@ namespace InventoryApp.ViewModels
             set => SetProperty(ref _editCategory, value);
         }
 
+        private bool _isCategoryModalOpen = false;
+        public bool IsCategoryModalOpen
+        {
+            get => _isCategoryModalOpen;
+            set => SetProperty(ref _isCategoryModalOpen, value);
+        }
+
+        public ICommand OpenCategoryModalCommand { get; }
+        public ICommand CloseCategoryModalCommand { get; }
+        public ICommand EditCategoryCommand { get; }
         public ICommand SaveCategoryCommand  { get; }
         public ICommand DeleteCategoryCommand{ get; }
         public ICommand NewCategoryCommand   { get; }
@@ -69,13 +86,6 @@ namespace InventoryApp.ViewModels
             set { SetProperty(ref _searchText, value); LoadItems(); }
         }
 
-        private Category? _filterCategory;
-        public Category? FilterCategory
-        {
-            get => _filterCategory;
-            set { SetProperty(ref _filterCategory, value); LoadItems(); }
-        }
-
         private string _filterStatus = "All";
         public string FilterStatus
         {
@@ -115,10 +125,15 @@ namespace InventoryApp.ViewModels
 
         public InventoryViewModel()
         {
+            OpenCategoryModalCommand = new RelayCommand(_ => IsCategoryModalOpen = true);
+            CloseCategoryModalCommand= new RelayCommand(_ => IsCategoryModalOpen = false);
+            
+            EditCategoryCommand   = new RelayCommand(p => EditCategory = p as Category ?? new Category());
             SaveCategoryCommand   = new RelayCommand(_ => SaveCategory());
-            DeleteCategoryCommand = new RelayCommand(_ => DeleteCategory(), _ => SelectedCategory?.Id > 0);
-            NewCategoryCommand    = new RelayCommand(_ => { SelectedCategory = new Category(); EditCategory = new Category(); });
-            OpenAddModalCommand   = new RelayCommand(_ => OpenModal(null));
+            DeleteCategoryCommand = new RelayCommand(p => DeleteCategory(p as Category), p => p is Category c && c.Id > 0);
+            NewCategoryCommand    = new RelayCommand(_ => EditCategory = new Category());
+            
+            OpenAddModalCommand   = new RelayCommand(p => OpenModal(p as InventoryItem));
             CloseModalCommand     = new RelayCommand(_ => IsAddModalOpen = false);
             SaveItemCommand       = new RelayCommand(_ => SaveItem());
             DeleteItemCommand     = new RelayCommand(p => DeleteItem(p as InventoryItem), p => p is InventoryItem);
@@ -131,15 +146,21 @@ namespace InventoryApp.ViewModels
         // ── Category logic ────────────────────────────────────────────
         private void LoadCategories()
         {
+            var prevCatId = SelectedCategory?.Id;
             Categories.Clear();
             CategoriesForFilter.Clear();
             CategoriesForFilter.Add(new Category { Id = 0, Name = "All Categories" });
+            
+            // Re-fetch (now includes ItemCount)
             foreach (var c in DatabaseHelper.GetCategories())
             {
                 Categories.Add(c);
                 CategoriesForFilter.Add(c);
             }
             CategoriesCount = Categories.Count;
+            
+            // Restore selection if possible, otherwise select "All" (which is actually null in our SelectedCategory semantics)
+            SelectedCategory = Categories.FirstOrDefault(c => c.Id == prevCatId);
         }
 
         private void SaveCategory()
@@ -151,17 +172,21 @@ namespace InventoryApp.ViewModels
             EditCategory = new Category();
         }
 
-        private void DeleteCategory()
+        private void DeleteCategory(Category? cat)
         {
-            DatabaseHelper.DeleteCategory(SelectedCategory.Id);
+            if (cat == null || cat.Id <= 0) return;
+            DatabaseHelper.DeleteCategory(cat.Id);
+            if (SelectedCategory?.Id == cat.Id) SelectedCategory = null;
             LoadCategories();
+            EditCategory = new Category(); // clear
         }
 
         // ── Inventory item logic ──────────────────────────────────────
         private void LoadItems()
         {
             bool? isSold = FilterStatus switch { "In Stock" => false, "Sold" => true, _ => null };
-            var catId = FilterCategory?.Id > 0 ? FilterCategory.Id : 0;
+            var catId = SelectedCategory?.Id > 0 ? SelectedCategory.Id : 0;
+            
             Items.Clear();
             foreach (var item in DatabaseHelper.GetInventoryItems(SearchText, catId, isSold))
                 Items.Add(item);
@@ -196,6 +221,8 @@ namespace InventoryApp.ViewModels
                 DatabaseHelper.UpdateInventoryItem(FormItem);
             }
             IsAddModalOpen = false;
+            // Reload categories so ItemCount updates on the sidebar
+            LoadCategories();
             LoadItems();
         }
 
@@ -203,6 +230,7 @@ namespace InventoryApp.ViewModels
         {
             if (item == null) return;
             DatabaseHelper.DeleteInventoryItem(item.SKU);
+            LoadCategories();
             LoadItems();
         }
 
