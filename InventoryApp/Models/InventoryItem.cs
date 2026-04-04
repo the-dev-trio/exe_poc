@@ -37,9 +37,14 @@ namespace InventoryApp.Models
 
     public class Customer
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Mobile { get; set; } = string.Empty;
+        public int    Id              { get; set; }
+        public string Name            { get; set; } = string.Empty;
+        public string Mobile          { get; set; } = string.Empty;
+        public string Address         { get; set; } = string.Empty;
+        public DateTime? LastPurchase { get; set; }
+        public string LastPurchaseDisplay => LastPurchase.HasValue
+            ? LastPurchase.Value.ToString("dd/MM/yyyy")
+            : "—";
     }
 
     public class Supplier
@@ -96,5 +101,15 @@ namespace InventoryApp.Models
         public decimal TotalWeight  { get; set; }
         public int    ItemCount     { get; set; }
         public string LineItemsJson { get; set; } = "[]";
+    }
+
+    public class SaleReportRow
+    {
+        public int     Id           { get; set; }
+        public DateTime Date        { get; set; }
+        public string CustomerName  { get; set; } = string.Empty;
+        public string ItemsSummary  { get; set; } = string.Empty;  // e.g. "Ring, Bangle (2 items)"
+        public decimal TotalAmount  { get; set; }
+        public decimal TotalWeight  { get; set; }   // 4dp
     }
 }

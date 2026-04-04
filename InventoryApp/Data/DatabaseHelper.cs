@@ -87,6 +87,8 @@ namespace InventoryApp.Data
 
             // Add Pcs column to Inventory if it was created before this version
             try { Exec(conn, "ALTER TABLE Inventory ADD COLUMN Pcs INTEGER NOT NULL DEFAULT 1"); } catch { }
+            // Add Address column to Customers if it was created before this version
+            try { Exec(conn, "ALTER TABLE Customers ADD COLUMN Address TEXT NOT NULL DEFAULT ''"); } catch { }
         }
 
         // ── Helpers ──────────────────────────────────────────────────────────────
@@ -337,16 +339,52 @@ namespace InventoryApp.Data
 
         // ── Customers ────────────────────────────────────────────────────────────
 
+        /// <summary>Returns all customers with address and last purchase date, optionally filtered.</summary>
+        public static List<Customer> GetCustomersWithLastPurchase(string? search = null)
+        {
+            var list = new List<Customer>();
+            using var conn = Open();
+            using var cmd  = conn.CreateCommand();
+            var where = string.IsNullOrWhiteSpace(search)
+                ? ""
+                : "WHERE c.Name LIKE $q OR c.Mobile LIKE $q";
+            cmd.CommandText = $@"
+                SELECT c.Id, c.Name, c.Mobile, c.Address,
+                       MAX(t.Date) AS LastPurchase
+                FROM   Customers c
+                LEFT JOIN Transactions t ON t.CustomerId = c.Id
+                {where}
+                GROUP BY c.Id
+                ORDER BY c.Name";
+            if (!string.IsNullOrWhiteSpace(search))
+                cmd.Parameters.AddWithValue("$q", $"%{search}%");
+            using var r = cmd.ExecuteReader();
+            while (r.Read())
+            {
+                DateTime? last = null;
+                if (!r.IsDBNull(4)) last = DateTime.Parse(r.GetString(4));
+                list.Add(new Customer
+                {
+                    Id           = r.GetInt32(0),
+                    Name         = r.GetString(1),
+                    Mobile       = r.GetString(2),
+                    Address      = r.GetString(3),
+                    LastPurchase = last,
+                });
+            }
+            return list;
+        }
+
         public static List<Customer> SearchCustomers(string query)
         {
             var list = new List<Customer>();
             using var conn = Open();
             using var cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT Id,Name,Mobile FROM Customers WHERE Name LIKE $q OR Mobile LIKE $q LIMIT 10";
+            cmd.CommandText = "SELECT Id,Name,Mobile,Address FROM Customers WHERE Name LIKE $q OR Mobile LIKE $q LIMIT 10";
             cmd.Parameters.AddWithValue("$q", $"%{query}%");
             using var r = cmd.ExecuteReader();
             while (r.Read())
-                list.Add(new Customer { Id = r.GetInt32(0), Name = r.GetString(1), Mobile = r.GetString(2) });
+                list.Add(new Customer { Id = r.GetInt32(0), Name = r.GetString(1), Mobile = r.GetString(2), Address = r.GetString(3) });
             return list;
         }
 
@@ -362,9 +400,10 @@ namespace InventoryApp.Data
                 if (existing != null) return Convert.ToInt32(existing);
             }
             using var ins = conn.CreateCommand();
-            ins.CommandText = "INSERT INTO Customers (Name,Mobile) VALUES ($n,$m) RETURNING Id";
+            ins.CommandText = "INSERT INTO Customers (Name,Mobile,Address) VALUES ($n,$m,$a) RETURNING Id";
             ins.Parameters.AddWithValue("$n", c.Name);
             ins.Parameters.AddWithValue("$m", c.Mobile);
+            ins.Parameters.AddWithValue("$a", c.Address);
             return Convert.ToInt32(ins.ExecuteScalar() ?? 0);
         }
 

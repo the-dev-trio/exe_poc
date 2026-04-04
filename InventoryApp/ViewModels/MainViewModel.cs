@@ -1,9 +1,7 @@
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows;
 using System.IO;
 using InventoryApp.Data;
-using System.Timers;
 using System.Windows.Threading;
 
 namespace InventoryApp.ViewModels
@@ -11,10 +9,10 @@ namespace InventoryApp.ViewModels
     public class MainViewModel : ViewModelBase
     {
         private ViewModelBase _currentView;
-        private bool _isSidebarExpanded = true;
         private string _currentNav = "Dashboard";
-        private string _shopName = "Reddy Jewellery";
+        private string _shopName    = "My Jewellery";
         private string _currentDateTime = string.Empty;
+        private string _currentPageTitle = "Dashboard";
         private readonly DispatcherTimer _clockTimer;
 
         public ViewModelBase CurrentView
@@ -23,47 +21,58 @@ namespace InventoryApp.ViewModels
             set => SetProperty(ref _currentView, value);
         }
 
-        public string SidebarWidth => _isSidebarExpanded ? "200" : "0";
         public string CurrentDateTime
         {
             get => _currentDateTime;
             set => SetProperty(ref _currentDateTime, value);
         }
+
         public string ShopName
         {
             get => _shopName;
             set => SetProperty(ref _shopName, value);
         }
 
-        // Nav button styles
-        public Style DashboardNavStyle   => NavStyle("Dashboard");
-        public Style DailyRatesNavStyle  => NavStyle("DailyRates");
-        public Style SalesNavStyle       => NavStyle("Sales");
-        public Style InventoryNavStyle   => NavStyle("Inventory");
-        public Style PurchasesNavStyle   => NavStyle("Purchases");
-        public Style SettingsNavStyle    => NavStyle("Settings");
+        public string CurrentPageTitle
+        {
+            get => _currentPageTitle;
+            set => SetProperty(ref _currentPageTitle, value);
+        }
 
+        // ── Nav styles ───────────────────────────────────────────────
+        public Style DashboardNavStyle  => NavStyle("Dashboard");
+        public Style DailyRatesNavStyle => NavStyle("DailyRates");
+        public Style SalesNavStyle      => NavStyle("Sales");
+        public Style InventoryNavStyle  => NavStyle("Inventory");
+        public Style PurchasesNavStyle  => NavStyle("Purchases");
+        public Style CustomersNavStyle  => NavStyle("Customers");
+        public Style ReportsNavStyle    => NavStyle("Reports");
+        public Style SettingsNavStyle   => NavStyle("Settings");
+
+        // ── Commands ──────────────────────────────────────────────────
         public ICommand ShowDashboardCommand  { get; }
         public ICommand ShowDailyRatesCommand { get; }
         public ICommand ShowSalesCommand      { get; }
         public ICommand ShowInventoryCommand  { get; }
         public ICommand ShowPurchasesCommand  { get; }
+        public ICommand ShowCustomersCommand  { get; }
+        public ICommand ShowReportsCommand    { get; }
         public ICommand ShowSettingsCommand   { get; }
-        public ICommand ToggleSidebarCommand  { get; }
         public ICommand BackupNowCommand      { get; }
 
         public MainViewModel()
         {
-            _shopName = DatabaseHelper.GetSetting("ShopName", "Reddy Jewellery");
+            _shopName    = DatabaseHelper.GetSetting("ShopName", "My Jewellery");
             _currentView = new DashboardViewModel();
 
-            ShowDashboardCommand  = new RelayCommand(_ => Navigate("Dashboard",  () => new DashboardViewModel()));
-            ShowDailyRatesCommand = new RelayCommand(_ => Navigate("DailyRates", () => new DailyRatesViewModel()));
-            ShowSalesCommand      = new RelayCommand(_ => Navigate("Sales",      () => new SalesViewModel()));
-            ShowInventoryCommand  = new RelayCommand(_ => Navigate("Inventory",  () => new InventoryViewModel()));
-            ShowPurchasesCommand  = new RelayCommand(_ => Navigate("Purchases",  () => new PurchasesViewModel()));
-            ShowSettingsCommand   = new RelayCommand(_ => Navigate("Settings",   () => new SettingsViewModel(OnSettingsSaved)));
-            ToggleSidebarCommand  = new RelayCommand(_ => ToggleSidebar());
+            ShowDashboardCommand  = new RelayCommand(_ => Navigate("Dashboard",  "🏠  Dashboard",   () => new DashboardViewModel()));
+            ShowDailyRatesCommand = new RelayCommand(_ => Navigate("DailyRates", "💰  Daily Rates",  () => new DailyRatesViewModel()));
+            ShowSalesCommand      = new RelayCommand(_ => Navigate("Sales",      "🛒  POS / Sales",  () => new SalesViewModel()));
+            ShowInventoryCommand  = new RelayCommand(_ => Navigate("Inventory",  "📦  Inventory",    () => new InventoryViewModel()));
+            ShowPurchasesCommand  = new RelayCommand(_ => Navigate("Purchases",  "🚚  Purchases",    () => new PurchasesViewModel()));
+            ShowCustomersCommand  = new RelayCommand(_ => Navigate("Customers",  "👤  Customers",    () => new CustomersViewModel()));
+            ShowReportsCommand    = new RelayCommand(_ => Navigate("Reports",    "📊  Monthly Reports", () => new ReportsViewModel()));
+            ShowSettingsCommand   = new RelayCommand(_ => Navigate("Settings",   "⚙️  Settings",     () => new SettingsViewModel(OnSettingsSaved)));
             BackupNowCommand      = new RelayCommand(_ => BackupNow());
 
             _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
@@ -72,16 +81,19 @@ namespace InventoryApp.ViewModels
             CurrentDateTime = DateTime.Now.ToString("ddd, dd MMM yyyy   hh:mm:ss tt");
         }
 
-        private void Navigate(string name, Func<ViewModelBase> factory)
+        private void Navigate(string name, string pageTitle, Func<ViewModelBase> factory)
         {
-            _currentNav = name;
-            CurrentView = factory();
-            // Notify all nav styles to refresh
+            _currentNav      = name;
+            CurrentPageTitle = pageTitle;
+            CurrentView      = factory();
+            // Notify all nav styles
             OnPropertyChanged(nameof(DashboardNavStyle));
             OnPropertyChanged(nameof(DailyRatesNavStyle));
             OnPropertyChanged(nameof(SalesNavStyle));
             OnPropertyChanged(nameof(InventoryNavStyle));
             OnPropertyChanged(nameof(PurchasesNavStyle));
+            OnPropertyChanged(nameof(CustomersNavStyle));
+            OnPropertyChanged(nameof(ReportsNavStyle));
             OnPropertyChanged(nameof(SettingsNavStyle));
         }
 
@@ -91,15 +103,9 @@ namespace InventoryApp.ViewModels
             return (Style)System.Windows.Application.Current.FindResource(key);
         }
 
-        private void ToggleSidebar()
-        {
-            _isSidebarExpanded = !_isSidebarExpanded;
-            OnPropertyChanged(nameof(SidebarWidth));
-        }
-
         private void OnSettingsSaved()
         {
-            ShopName = DatabaseHelper.GetSetting("ShopName", "Reddy Jewellery");
+            ShopName = DatabaseHelper.GetSetting("ShopName", "My Jewellery");
         }
 
         private void BackupNow()
