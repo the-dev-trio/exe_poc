@@ -37,12 +37,14 @@ namespace InventoryApp.ViewModels
 
         // Nav button styles
         public Style DashboardNavStyle   => NavStyle("Dashboard");
+        public Style DailyRatesNavStyle  => NavStyle("DailyRates");
         public Style SalesNavStyle       => NavStyle("Sales");
         public Style InventoryNavStyle   => NavStyle("Inventory");
         public Style PurchasesNavStyle   => NavStyle("Purchases");
         public Style SettingsNavStyle    => NavStyle("Settings");
 
         public ICommand ShowDashboardCommand  { get; }
+        public ICommand ShowDailyRatesCommand { get; }
         public ICommand ShowSalesCommand      { get; }
         public ICommand ShowInventoryCommand  { get; }
         public ICommand ShowPurchasesCommand  { get; }
@@ -56,6 +58,7 @@ namespace InventoryApp.ViewModels
             _currentView = new DashboardViewModel();
 
             ShowDashboardCommand  = new RelayCommand(_ => Navigate("Dashboard",  () => new DashboardViewModel()));
+            ShowDailyRatesCommand = new RelayCommand(_ => Navigate("DailyRates", () => new DailyRatesViewModel()));
             ShowSalesCommand      = new RelayCommand(_ => Navigate("Sales",      () => new SalesViewModel()));
             ShowInventoryCommand  = new RelayCommand(_ => Navigate("Inventory",  () => new InventoryViewModel()));
             ShowPurchasesCommand  = new RelayCommand(_ => Navigate("Purchases",  () => new PurchasesViewModel()));
@@ -75,6 +78,7 @@ namespace InventoryApp.ViewModels
             CurrentView = factory();
             // Notify all nav styles to refresh
             OnPropertyChanged(nameof(DashboardNavStyle));
+            OnPropertyChanged(nameof(DailyRatesNavStyle));
             OnPropertyChanged(nameof(SalesNavStyle));
             OnPropertyChanged(nameof(InventoryNavStyle));
             OnPropertyChanged(nameof(PurchasesNavStyle));

@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:InventoryApp"
              Background="{StaticResource AppBackgroundBrush}">
-    <Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <StackPanel Margin="24">
             <TextBlock Text="New Purchase Entry" FontSize="24" Style="{StaticResource HeadingText}" Margin="0,0,0,20"/>
 
-            <!-- Header Info -->
+            <!-- Header Info (Supplier / Invoice / Date) -->
             <Border Style="{StaticResource CardBorder}" Margin="0,0,0,16">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -20,7 +20,7 @@
                         <ComboBox ItemsSource="{Binding Suppliers}" SelectedItem="{Binding SelectedSupplier}" DisplayMemberPath="Name"/>
                         <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
                             <TextBox Width="140" Text="{Binding NewSupplierName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,6,0"/>
-                            <Button Content="Add Supplier" Command="{Binding AddSupplierCommand}" Style="{StaticResource PrimaryButtonSmall}"/>
+                            <Button Content="+ Add" Command="{Binding AddSupplierCommand}" Style="{StaticResource PrimaryButtonSmall}"/>
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Margin="0,0,12,0">
@@ -29,8 +29,7 @@
                     </StackPanel>
                     <StackPanel Grid.Column="2">
                         <Label Content="Purchase Date"/>
-                        <DatePicker SelectedDate="{Binding PurchaseDate}"
-                                    Background="#ffffff" Foreground="#111827"/>
+                        <DatePicker SelectedDate="{Binding PurchaseDate}" Background="#ffffff" Foreground="#111827"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -47,7 +46,7 @@
                             <ColumnDefinition Width="90"/>
                             <ColumnDefinition Width="90"/>
                             <ColumnDefinition Width="90"/>
-                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBox Grid.Column="0" Text="{Binding LineForm.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
@@ -56,35 +55,36 @@
                         <ComboBox Grid.Column="2" ItemsSource="{Binding PurityOptions}" SelectedItem="{Binding LineForm.PurityStr}" Margin="0,0,8,0"/>
                         <TextBox Grid.Column="3" Text="{Binding LineForm.GrossWt, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
                         <TextBox Grid.Column="4" Text="{Binding LineForm.StoneWt, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
-                        <TextBox Grid.Column="5" Text="{Binding LineForm.NetWt, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
-                        <TextBox Grid.Column="6" Text="{Binding LineForm.CostPrice, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
-                        <Button Grid.Column="7" Content="Add Line" Command="{Binding AddLineCommand}" Style="{StaticResource PrimaryButtonSmall}"/>
+                        <TextBox Grid.Column="5" Text="{Binding LineForm.CostPrice, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
+                        <TextBox Grid.Column="6" Text="{Binding LineForm.Pcs, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"/>
+                        <Button Grid.Column="7" Content="Add +" Command="{Binding AddLineCommand}" Style="{StaticResource PrimaryButtonSmall}"/>
                     </Grid>
                     <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                        <TextBlock Text="Name" Width="130" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
+                        <TextBlock Text="Name"     Width="130" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
                         <TextBlock Text="Category" Width="128" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
-                        <TextBlock Text="Purity" Width="128" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
-                        <TextBlock Text="Gross Wt" Width="98" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
-                        <TextBlock Text="Stone Wt" Width="98" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
-                        <TextBlock Text="Net Wt" Width="98" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
-                        <TextBlock Text="Cost ₹" Width="108" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
+                        <TextBlock Text="Purity"   Width="128" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
+                        <TextBlock Text="Gross Wt" Width="98"  Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
+                        <TextBlock Text="Stone Wt" Width="98"  Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
+                        <TextBlock Text="Cost ₹"   Width="98"  Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
+                        <TextBlock Text="Pcs"      Width="68"  Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
 
-            <!-- Lines DataGrid -->
+            <!-- Current Batch Lines DataGrid -->
             <DataGrid ItemsSource="{Binding PurchaseLines}" AutoGenerateColumns="False" IsReadOnly="True"
-                      MaxHeight="300" Margin="0,0,0,16">
+                      MaxHeight="260" Margin="0,0,0,12">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name"     Binding="{Binding Name}"     Width="*"/>
                     <DataGridTextColumn Header="Purity"   Binding="{Binding Purity}"   Width="90"/>
-                    <DataGridTextColumn Header="Gross Wt" Binding="{Binding GrossWt, StringFormat={}{0:N2}}" Width="80"/>
-                    <DataGridTextColumn Header="Net Wt"   Binding="{Binding NetWt, StringFormat={}{0:N2}}"   Width="80"/>
-                    <DataGridTextColumn Header="Cost ₹"   Binding="{Binding CostPrice, StringFormat={}₹{0:N0}}" Width="90"/>
+                    <DataGridTextColumn Header="Gross Wt" Binding="{Binding GrossWt, StringFormat={}{0:N4}g}" Width="90"/>
+                    <DataGridTextColumn Header="Net Wt"   Binding="{Binding NetWt,   StringFormat={}{0:N4}g}" Width="90"/>
+                    <DataGridTextColumn Header="Pcs"      Binding="{Binding Pcs}"       Width="50"/>
+                    <DataGridTextColumn Header="Cost ₹"   Binding="{Binding CostPrice, StringFormat={}&#8377;{0:N0}}" Width="90"/>
                     <DataGridTemplateColumn Header="" Width="50">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="Remove" Width="60" Style="{StaticResource DangerButtonSmall}"
+                                <Button Content="&#10005;" Width="36" Style="{StaticResource DangerButtonSmall}"
                                         Command="{Binding DataContext.RemoveLineCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         CommandParameter="{Binding}"/>
                             </DataTemplate>
@@ -93,9 +93,39 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <!-- Footer -->
-            <Button Content="Save &amp; Add to Inventory" Command="{Binding SaveAndAddToInventoryCommand}"
-                    Style="{StaticResource PrimaryButton}" Width="260" Height="44" FontSize="15" HorizontalAlignment="Right"/>
+            <!-- Batch totals bar + Save button -->
+            <Grid Margin="0,0,0,28">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding BatchItemCount,  StringFormat={}Items: {0}}"
+                               Foreground="{StaticResource MutedTextBrush}" Margin="0,0,24,0" FontSize="13"/>
+                    <TextBlock Text="{Binding BatchTotalWeight,StringFormat={}Total Net Wt: {0:N4}g}"
+                               Foreground="{StaticResource MutedTextBrush}" FontSize="13"/>
+                </StackPanel>
+                <Button Grid.Column="1"
+                        Content="Save &amp; Add to Inventory"
+                        Command="{Binding SaveAndAddToInventoryCommand}"
+                        Style="{StaticResource PrimaryButton}" Padding="20,10" FontSize="14"/>
+            </Grid>
+
+            <!-- ═══ Purchase History ════════════════════════════════════ -->
+            <TextBlock Text="PURCHASE HISTORY" Style="{StaticResource SectionLabelText}" Margin="0,0,0,10"/>
+            <Border Style="{StaticResource CardBorder}" Padding="0">
+                <DataGrid ItemsSource="{Binding PurchaseHistory}" AutoGenerateColumns="False" IsReadOnly="True"
+                          MaxHeight="320" BorderThickness="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Date"     Binding="{Binding Date, StringFormat=dd/MM/yyyy}" Width="100"/>
+                        <DataGridTextColumn Header="Supplier" Binding="{Binding SupplierName}"  Width="*"/>
+                        <DataGridTextColumn Header="Invoice"  Binding="{Binding InvoiceNumber}" Width="130"/>
+                        <DataGridTextColumn Header="Items"    Binding="{Binding ItemCount}"     Width="60"/>
+                        <DataGridTextColumn Header="Total Wt" Binding="{Binding TotalWeight, StringFormat={}{0:N4}g}" Width="110"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
         </StackPanel>
-    </Grid>
+    </ScrollViewer>
 </UserControl>

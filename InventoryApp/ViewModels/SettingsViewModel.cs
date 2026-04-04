@@ -21,6 +21,12 @@ namespace InventoryApp.ViewModels
         private string _gstNumber = string.Empty;
         public string GSTNumber { get => _gstNumber; set => SetProperty(ref _gstNumber, value); }
 
+        private decimal _gstRate = 3.0m;
+        public decimal GSTRate { get => _gstRate; set => SetProperty(ref _gstRate, value); }
+
+        private decimal _makingChargeDefault = 0m;
+        public decimal MakingChargeDefault { get => _makingChargeDefault; set => SetProperty(ref _makingChargeDefault, value); }
+
         private string _labelPrinter = string.Empty;
         public string LabelPrinter { get => _labelPrinter; set => SetProperty(ref _labelPrinter, value); }
 
@@ -52,9 +58,11 @@ namespace InventoryApp.ViewModels
 
         private void Load()
         {
-            ShopName      = DatabaseHelper.GetSetting("ShopName", "Reddy Jewellery");
+            ShopName      = DatabaseHelper.GetSetting("ShopName", "My Jewellery");
             ShopAddress   = DatabaseHelper.GetSetting("ShopAddress", "");
             GSTNumber     = DatabaseHelper.GetSetting("GSTNumber", "");
+            GSTRate       = decimal.TryParse(DatabaseHelper.GetSetting("GSTRate", "3.0"), out var gr) ? gr : 3.0m;
+            MakingChargeDefault = decimal.TryParse(DatabaseHelper.GetSetting("MakingChargeDefault", "0"), out var mc) ? mc : 0m;
             LabelPrinter  = DatabaseHelper.GetSetting("LabelPrinter", "");
             ReceiptPrinter = DatabaseHelper.GetSetting("ReceiptPrinter", "");
             AutoBackup    = DatabaseHelper.GetSetting("AutoBackup", "0") == "1";
@@ -77,6 +85,8 @@ namespace InventoryApp.ViewModels
             DatabaseHelper.SetSetting("ShopName",      ShopName);
             DatabaseHelper.SetSetting("ShopAddress",   ShopAddress);
             DatabaseHelper.SetSetting("GSTNumber",     GSTNumber);
+            DatabaseHelper.SetSetting("GSTRate",       GSTRate.ToString());
+            DatabaseHelper.SetSetting("MakingChargeDefault", MakingChargeDefault.ToString());
             DatabaseHelper.SetSetting("LabelPrinter",  LabelPrinter  == "(none)" ? "" : LabelPrinter);
             DatabaseHelper.SetSetting("ReceiptPrinter", ReceiptPrinter == "(none)" ? "" : ReceiptPrinter);
             DatabaseHelper.SetSetting("AutoBackup",    AutoBackup ? "1" : "0");
@@ -128,11 +138,17 @@ namespace InventoryApp.ViewModels
 
         private void TestReceipt()
         {
+            var item = new Models.CartItem { SKU = "TEST", Name = "Test Item", NetWt = 1m, Rate = 5000m };
+            decimal subtotal = item.FinalAmount;
+            decimal cgst     = Math.Round(subtotal * 0.015m, 2);
+            decimal sgst     = cgst;
+            decimal grandTotal = subtotal + cgst + sgst;
             Printing.ReceiptPrinter.PrintReceipt(
                 ReceiptPrinter == "(none)" ? "" : ReceiptPrinter,
-                ShopName, ShopAddress, "Test Customer",
-                DateTime.Now, new[] { new Models.CartItem { SKU="TEST", Name="Test Item", NetWt=1m, Rate=5000m } },
-                5000m, "Cash");
+                ShopName, ShopAddress, GSTNumber,
+                "Test Customer", DateTime.Now,
+                new[] { item },
+                subtotal, 0m, cgst, sgst, grandTotal, "Cash");
         }
     }
 }

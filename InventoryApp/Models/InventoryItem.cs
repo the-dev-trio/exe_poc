@@ -29,6 +29,7 @@ namespace InventoryApp.Models
         public decimal GrossWt { get; set; }
         public decimal StoneWt { get; set; }
         public decimal NetWt { get; set; }
+        public int    Pcs { get; set; } = 1;
         public bool IsSold { get; set; }
         public decimal CostPrice { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
@@ -83,5 +84,17 @@ namespace InventoryApp.Models
             PurityType.Silver  => Silver,
             _ => 0
         };
+    }
+
+    public class PurchaseRecord
+    {
+        public int    Id            { get; set; }
+        public DateTime Date        { get; set; } = DateTime.Now;
+        public int    SupplierId    { get; set; }
+        public string SupplierName  { get; set; } = string.Empty;
+        public string InvoiceNumber { get; set; } = string.Empty;
+        public decimal TotalWeight  { get; set; }
+        public int    ItemCount     { get; set; }
+        public string LineItemsJson { get; set; } = "[]";
     }
 }

@@ -88,7 +88,8 @@ namespace InventoryApp.Printing
     public static class ReceiptPrinter
     {
         public static void PrintReceipt(string printerName, string shopName, string address,
-            string customerName, DateTime date, IEnumerable<Models.CartItem> items,
+            string gstNumber, string customerName, DateTime date, IEnumerable<Models.CartItem> items,
+            decimal subtotal, decimal discount, decimal cgst, decimal sgst,
             decimal grandTotal, string paymentMode)
         {
             if (string.IsNullOrWhiteSpace(printerName))
@@ -101,15 +102,15 @@ namespace InventoryApp.Printing
 
             using var doc = new System.Drawing.Printing.PrintDocument();
             doc.PrinterSettings.PrinterName = printerName;
-            // Silent — suppress status dialog
             doc.PrintController = new System.Drawing.Printing.StandardPrintController();
 
-            var lines = BuildReceiptLines(shopName, address, customerName, date, items, grandTotal, paymentMode);
+            var lines = BuildReceiptLines(shopName, address, gstNumber, customerName, date,
+                items, subtotal, discount, cgst, sgst, grandTotal, paymentMode);
             doc.PrintPage += (_, e) =>
             {
                 if (e.Graphics == null) return;
-                var font   = new System.Drawing.Font("Courier New", 8);
-                float y    = 10;
+                var font = new System.Drawing.Font("Courier New", 8);
+                float y  = 10;
                 foreach (var line in lines)
                 {
                     e.Graphics.DrawString(line, font, System.Drawing.Brushes.Black, 10, y);
@@ -120,31 +121,38 @@ namespace InventoryApp.Printing
             doc.Print();
         }
 
-        private static List<string> BuildReceiptLines(string shopName, string address, string customerName,
-            DateTime date, IEnumerable<Models.CartItem> items, decimal grandTotal, string paymentMode)
+        private static List<string> BuildReceiptLines(
+            string shopName, string address, string gstNumber, string customerName,
+            DateTime date, IEnumerable<Models.CartItem> items,
+            decimal subtotal, decimal discount, decimal cgst, decimal sgst,
+            decimal grandTotal, string paymentMode)
         {
-            var lines = new List<string>
-            {
-                shopName.PadLeft((40 + shopName.Length) / 2),
-                address,
-                "",
-                $"Date   : {date:dd/MM/yyyy hh:mm tt}",
-                $"Customer: {customerName}",
-                new string('-', 42),
-                $"{"Item",-20} {"Wt",6} {"Rate",7} {"Amt",7}",
-                new string('-', 42),
-            };
+            var lines = new List<string>();
+            lines.Add(shopName.PadLeft((40 + shopName.Length) / 2));
+            if (!string.IsNullOrWhiteSpace(address))   lines.Add(address);
+            if (!string.IsNullOrWhiteSpace(gstNumber)) lines.Add($"GSTIN: {gstNumber}");
+            lines.Add("");
+            lines.Add($"Date    : {date:dd/MM/yyyy hh:mm tt}");
+            lines.Add($"Customer: {customerName}");
+            lines.Add(new string('-', 42));
+            lines.Add($"{"Item",-20} {"Wt",6} {"Rate",7} {"Amt",7}");
+            lines.Add(new string('-', 42));
+
             foreach (var item in items)
-                lines.Add($"{item.Name[..Math.Min(item.Name.Length,18)], -18} {item.NetWt,6:N2} {item.Rate,7:N0} {item.FinalAmount,7:N0}");
-            lines.AddRange(new[]
-            {
-                new string('-', 42),
-                $"{"TOTAL",-34} {grandTotal,7:N0}",
-                $"Payment : {paymentMode}",
-                "",
-                "Thank you! Visit again.",
-                "",
-            });
+                lines.Add($"{item.Name[..Math.Min(item.Name.Length,18)],-18} {item.NetWt,6:N2} {item.Rate,7:N0} {item.FinalAmount,7:N0}");
+
+            lines.Add(new string('-', 42));
+            lines.Add($"{"Subtotal",-34} {subtotal,7:N2}");
+            if (discount > 0)
+                lines.Add($"{"Discount",-34}-{discount,6:N2}");
+            lines.Add($"{"CGST",-34} {cgst,7:N2}");
+            lines.Add($"{"SGST",-34} {sgst,7:N2}");
+            lines.Add(new string('=', 42));
+            lines.Add($"{"GRAND TOTAL",-34} {grandTotal,7:N2}");
+            lines.Add($"Payment : {paymentMode}");
+            lines.Add("");
+            lines.Add("       Thank you! Visit again.       ");
+            lines.Add("");
             return lines;
         }
     }

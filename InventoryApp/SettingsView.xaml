@@ -15,7 +15,22 @@
                     <Label Content="Address / Phone"/>
                     <TextBox Text="{Binding ShopAddress, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
                     <Label Content="GST / Tax Number"/>
-                    <TextBox Text="{Binding GSTNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Text="{Binding GSTNumber, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <Label Content="Default GST %" Padding="0,2,0,2"/>
+                            <TextBox Text="{Binding GSTRate, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <Label Content="Default Making Charge (₹/item)" Padding="0,2,0,2"/>
+                            <TextBox Text="{Binding MakingChargeDefault, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                        </StackPanel>
+                    </Grid>
                 </StackPanel>
             </Border>
 

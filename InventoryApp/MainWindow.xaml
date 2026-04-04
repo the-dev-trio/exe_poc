@@ -30,7 +30,6 @@
             <Grid Margin="16,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
@@ -41,16 +40,10 @@
                         Background="Transparent" Foreground="#374151" BorderThickness="0"
                         FontSize="18" Cursor="Hand" VerticalAlignment="Center"/>
 
-                <!-- Brand name -->
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding ShopName}" FontSize="20" Style="{StaticResource HeadingText}"/>
-                    <TextBlock Text="Jewellery Management System" FontSize="11" Foreground="{StaticResource MutedTextBrush}"/>
-                </StackPanel>
-
-                <!-- Spacer -->
-                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                <!-- Right: DateTime + Backup -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="{Binding CurrentDateTime}" FontSize="13" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,20,0" VerticalAlignment="Center"/>
-                    <Button Content="Backup Now" Command="{Binding BackupNowCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,12,0"/>
+                    <Button Content="💾  Backup Now" Command="{Binding BackupNowCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,12,0"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -58,21 +51,31 @@
         <!-- ═══ SIDEBAR ═══════════════════════════════════════════════ -->
         <Border Grid.Row="1" Grid.Column="0" Background="{StaticResource SidebarBrush}" BorderBrush="{StaticResource SidebarDividerBrush}" BorderThickness="0,0,1,0">
             <StackPanel Margin="10,18,10,0">
-                <TextBlock Text="Reddy Jewellery" FontSize="18" Style="{StaticResource HeadingText}" Foreground="{StaticResource GoldBrush}" Margin="8,0,8,2"/>
-                <TextBlock Text="EST. 2026" FontSize="10" Foreground="{StaticResource SidebarTextBrush}" Margin="8,0,8,16"/>
-                <Button Content="Dashboard"
+                <!-- Brand — bound to ShopName setting -->
+                <TextBlock Text="{Binding ShopName}" FontSize="18" Style="{StaticResource HeadingText}" Foreground="{StaticResource GoldBrush}" Margin="8,0,8,2"
+                           TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="Jewellery Manager" FontSize="10" Foreground="{StaticResource SidebarTextBrush}" Margin="8,0,8,16"/>
+
+                <Button Content="🏠  Dashboard"
                         Style="{Binding DashboardNavStyle, Mode=OneWay}"
                         Command="{Binding ShowDashboardCommand}" />
-                <Button Content="POS / Sales  [F1]"
+                <Button Content="💰  Daily Rates"
+                        Style="{Binding DailyRatesNavStyle, Mode=OneWay}"
+                        Command="{Binding ShowDailyRatesCommand}" />
+                <Button Content="🛒  POS / Sales  [F1]"
                         Style="{Binding SalesNavStyle, Mode=OneWay}"
                         Command="{Binding ShowSalesCommand}" />
-                <Button Content="Inventory"
+                <Button Content="📦  Inventory"
                         Style="{Binding InventoryNavStyle, Mode=OneWay}"
                         Command="{Binding ShowInventoryCommand}" />
-                <Button Content="Purchases"
+                <Button Content="🚚  Purchases"
                         Style="{Binding PurchasesNavStyle, Mode=OneWay}"
                         Command="{Binding ShowPurchasesCommand}" />
-                <Button Content="Settings"
+
+                <!-- Divider -->
+                <Border Height="1" Background="#1e2d5a" Margin="8,12,8,8"/>
+
+                <Button Content="⚙️  Settings"
                         Style="{Binding SettingsNavStyle, Mode=OneWay}"
                         Command="{Binding ShowSettingsCommand}" />
             </StackPanel>

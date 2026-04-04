@@ -41,6 +41,7 @@ namespace InventoryApp.Data
                     GrossWt     REAL NOT NULL DEFAULT 0,
                     StoneWt     REAL NOT NULL DEFAULT 0,
                     NetWt       REAL NOT NULL DEFAULT 0,
+                    Pcs         INTEGER NOT NULL DEFAULT 1,
                     IsSold      INTEGER NOT NULL DEFAULT 0,
                     CostPrice   REAL NOT NULL DEFAULT 0,
                     CreatedDate TEXT NOT NULL
@@ -58,18 +59,34 @@ namespace InventoryApp.Data
                     TotalAmount   REAL NOT NULL DEFAULT 0,
                     LineItemsJson TEXT NOT NULL DEFAULT '[]'
                 );
+                CREATE TABLE IF NOT EXISTS Purchases (
+                    Id            INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Date          TEXT NOT NULL,
+                    SupplierId    INTEGER NOT NULL DEFAULT 0,
+                    SupplierName  TEXT NOT NULL DEFAULT '',
+                    InvoiceNumber TEXT NOT NULL DEFAULT '',
+                    TotalWeight   REAL NOT NULL DEFAULT 0,
+                    ItemCount     INTEGER NOT NULL DEFAULT 0,
+                    LineItemsJson TEXT NOT NULL DEFAULT '[]'
+                );
             ");
 
             // Seed default metal rates if not present
             foreach (var key in new[] { "Gold24K", "Gold22K", "Gold18K", "Silver" })
                 Exec(conn, $"INSERT OR IGNORE INTO Settings (Key,Value) VALUES ('{key}','0')");
-            Exec(conn, "INSERT OR IGNORE INTO Settings (Key,Value) VALUES ('ShopName','Reddy Jewellery')");
+            Exec(conn, "INSERT OR IGNORE INTO Settings (Key,Value) VALUES ('ShopName','My Jewellery')");
             Exec(conn, "INSERT OR IGNORE INTO Settings (Key,Value) VALUES ('ShopAddress','')");
             Exec(conn, "INSERT OR IGNORE INTO Settings (Key,Value) VALUES ('GSTNumber','')");
+            Exec(conn, "INSERT OR IGNORE INTO Settings (Key,Value) VALUES ('GSTRate','3.0')");
+            Exec(conn, "INSERT OR IGNORE INTO Settings (Key,Value) VALUES ('MakingChargeDefault','0')");
             Exec(conn, "INSERT OR IGNORE INTO Settings (Key,Value) VALUES ('LabelPrinter','')");
             Exec(conn, "INSERT OR IGNORE INTO Settings (Key,Value) VALUES ('ReceiptPrinter','')");
             Exec(conn, "INSERT OR IGNORE INTO Settings (Key,Value) VALUES ('AutoBackup','0')");
             Exec(conn, "INSERT OR IGNORE INTO Settings (Key,Value) VALUES ('BackupPath','')");
+            Exec(conn, "INSERT OR IGNORE INTO Settings (Key,Value) VALUES ('RatesLastUpdated','')");
+
+            // Add Pcs column to Inventory if it was created before this version
+            try { Exec(conn, "ALTER TABLE Inventory ADD COLUMN Pcs INTEGER NOT NULL DEFAULT 1"); } catch { }
         }
 
         // ── Helpers ──────────────────────────────────────────────────────────────
@@ -395,6 +412,45 @@ namespace InventoryApp.Data
         public static void BackupTo(string targetPath)
         {
             File.Copy(DbPath, targetPath, overwrite: true);
+        }
+
+        // ── Purchases ─────────────────────────────────────────────────────────────
+
+        public static void AddPurchase(PurchaseRecord p)
+        {
+            using var conn = Open();
+            using var cmd  = conn.CreateCommand();
+            cmd.CommandText = @"INSERT INTO Purchases (Date,SupplierId,SupplierName,InvoiceNumber,TotalWeight,ItemCount,LineItemsJson)
+                                VALUES ($dt,$sid,$sn,$inv,$tw,$ic,$json)";
+            cmd.Parameters.AddWithValue("$dt",   p.Date.ToString("o"));
+            cmd.Parameters.AddWithValue("$sid",  p.SupplierId);
+            cmd.Parameters.AddWithValue("$sn",   p.SupplierName);
+            cmd.Parameters.AddWithValue("$inv",  p.InvoiceNumber);
+            cmd.Parameters.AddWithValue("$tw",   p.TotalWeight);
+            cmd.Parameters.AddWithValue("$ic",   p.ItemCount);
+            cmd.Parameters.AddWithValue("$json", p.LineItemsJson);
+            cmd.ExecuteNonQuery();
+        }
+
+        public static List<PurchaseRecord> GetPurchases(int limit = 50)
+        {
+            var list = new List<PurchaseRecord>();
+            using var conn = Open();
+            using var cmd  = conn.CreateCommand();
+            cmd.CommandText = $"SELECT Id,Date,SupplierId,SupplierName,InvoiceNumber,TotalWeight,ItemCount FROM Purchases ORDER BY Date DESC LIMIT {limit}";
+            using var r = cmd.ExecuteReader();
+            while (r.Read())
+                list.Add(new PurchaseRecord
+                {
+                    Id            = r.GetInt32(0),
+                    Date          = DateTime.Parse(r.GetString(1)),
+                    SupplierId    = r.GetInt32(2),
+                    SupplierName  = r.GetString(3),
+                    InvoiceNumber = r.GetString(4),
+                    TotalWeight   = r.GetDecimal(5),
+                    ItemCount     = r.GetInt32(6),
+                });
+            return list;
         }
     }
 }

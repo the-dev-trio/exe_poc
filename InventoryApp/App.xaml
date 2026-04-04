@@ -34,6 +34,9 @@
         <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
             <local:DashboardView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DailyRatesViewModel}">
+            <local:DailyRatesView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:InventoryViewModel}">
             <local:InventoryView />
         </DataTemplate>
