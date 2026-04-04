@@ -423,6 +423,55 @@ namespace InventoryApp.Data
             cmd.ExecuteNonQuery();
         }
 
+        public static List<SaleReportRow> GetSaleReport(DateTime start, DateTime end)
+        {
+            var list = new List<SaleReportRow>();
+            using var conn = Open();
+            using var cmd = conn.CreateCommand();
+            // End date needs to include the full day
+            var endOfDay = end.Date.AddDays(1).AddTicks(-1);
+            cmd.CommandText = @"SELECT Id,Date,CustomerName,TotalAmount,LineItemsJson 
+                                FROM Transactions 
+                                WHERE Date >= $s AND Date <= $e 
+                                ORDER BY Date DESC";
+            cmd.Parameters.AddWithValue("$s", start.ToString("o"));
+            cmd.Parameters.AddWithValue("$e", endOfDay.ToString("o"));
+
+            using var r = cmd.ExecuteReader();
+            while (r.Read())
+            {
+                var row = new SaleReportRow
+                {
+                    Id           = r.GetInt32(0),
+                    Date         = DateTime.Parse(r.GetString(1)),
+                    CustomerName = r.GetString(2),
+                    TotalAmount  = r.GetDecimal(3)
+                };
+
+                // Parse the JSON array to get the summary and total weight
+                var json = r.GetString(4);
+                try
+                {
+                    var items = System.Text.Json.JsonSerializer.Deserialize<List<CartItem>>(json);
+                    if (items != null)
+                    {
+                        row.TotalWeight = items.Sum(i => i.NetWt);
+                        var names = items.Select(i => i.Name).ToList();
+                        if (names.Count > 0)
+                        {
+                            var summary = string.Join(", ", names.Take(3));
+                            if (names.Count > 3) summary += "...";
+                            row.ItemsSummary = $"{summary} ({names.Count} items)";
+                        }
+                    }
+                }
+                catch { }
+
+                list.Add(row);
+            }
+            return list;
+        }
+
         // ── Suppliers ─────────────────────────────────────────────────────────────
 
         public static List<Supplier> GetSuppliers()
